@@ -5,3 +5,19 @@
 body {
     background-color:red;   
 }
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 25px;
+    background-color: yellow;
+    text-align: center  ;
+}
+
+.selection-area {
+    width: 100%;
+    padding: 50px;
+    height: 200px;
+    background-color: black;
+}

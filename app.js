@@ -1,5 +1,6 @@
 console.log("Tic Tac Toe");
 
+
 const winningCombinations = [
     [0, 1, 2],
     [0, 3, 6],
@@ -12,7 +13,7 @@ const winningCombinations = [
 ]
 
 let player1 = {
-    selections: [9, 9, 9, 9, 8],
+    selections: [],
     symbol: "x"
 }
 
@@ -21,48 +22,79 @@ let player2 = {
     symbol: "0"
 }
 
+isPlayer1 = true;
+
 const maxAttempts = 9;
-
 let gameResult = "";
-
+let attempts = 0;
 // TODO: Get Input
 
-let matches = 0;
+
+let selectionAreas = document.querySelectorAll(".selection-area");
+
+let handleSelectionAreaClick = function (e) {
+    attempts += 1;
+    console.log(e.target.dataset.ref)
+    if (isPlayer1) {
+        e.target.style.backgroundColor = "white";
+        player1.selections.push(Number(e.target.dataset.ref))
+        checkSelectionsForWinningCombination(player1.selections);
+        isPlayer1 = false;
+    } else {
+        e.target.style.backgroundColor = "green";
+        player2.selections.push(Number(e.target.dataset.ref))
+        checkSelectionsForWinningCombination(player2.selections);
+        isPlayer1 = true;
+    }
+    e.target.removeEventListener("click", handleSelectionAreaClick);
+
+}
+
+selectionAreas.forEach(function (selectionArea) {
+    selectionArea.addEventListener('click', handleSelectionAreaClick);
+})
+
+console.log(selectionAreas);
+
+const winningScore = 3;
+const minSelections = 3;
 // if player 1 selections 3 or more check if player 1 has 
 //a winning combination
 
-let attempts = 0;
 
-let checkSelection = function () {
-    attempts += 1;
-    if (player1.selections.length >= 3) {
-        let combinationCounter = 0;
-        // while no winning combination and haven't finished checking cobinations
-        while (matches < 3 && combinationCounter < winningCombinations.length) {
-            console.log("combination counter " + combinationCounter);
-            let counter = 0;
+
+let checkSelectionsForWinningCombination = function (playerSelections) {
+    let matches = 0;
+
+    if (playerSelections.length >= minSelections) {
+        let winningCombinationIndex = 0;
+        // while no winning combination and haven't finished checking all winning cobinations
+        while (matches < winningScore && winningCombinationIndex < winningCombinations.length) {
+
+            let playerSelectionsIndex = 0;
             matches = 0;
-            while (matches < 3 && counter < player1.selections.length) {
+            // console.log("1st while");
+            // while no winning combination and haven't finished checking all selections
+            while (matches < winningScore && playerSelectionsIndex < playerSelections.length) {
+                // console.log("2nd while")
+                let winningCombination = winningCombinations[winningCombinationIndex];
 
-                if (winningCombinations[combinationCounter].includes(player1.selections[counter])) {
-                    console.log("winning combinations x = " + winningCombinations[combinationCounter] + ' does include ' + player1.selections[counter]);
+                // check if current selection is part of winning combination
+                if (winningCombination.includes(playerSelections[playerSelectionsIndex])) {
                     matches += 1;
                 }
-                counter += 1;
-                console.log("matches = " + matches);
-                console.log("counter = " + counter);
+
+                playerSelectionsIndex += 1;
             }
 
-            combinationCounter += 1;
+            winningCombinationIndex += 1;
 
         }
 
-        if (matches === 3) {
-            console.log("we have a winner")
-        } else if (attempts < maxAttempts) {
-            console.log("try again");
-        } else {
-            console.log("we have a draw");
+        if (matches === winningScore) {
+            isPlayer1 ? console.log("Winner is player 1!") :
+                console.log("Winner is player 2!")
+
         }
 
     }
@@ -72,6 +104,3 @@ let checkSelection = function () {
 
 }
 
-while (attempts < maxAttempts) {
-    checkSelection();
-}
