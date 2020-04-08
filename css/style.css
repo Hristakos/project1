@@ -44,25 +44,57 @@ body {
     margin: 0 25%;
   
 }
-/* .player-1 {
-    width: 100%;
-    padding: 50px;
-    height: 200px;
+.score-board {
+    margin-left: 85%;
+    background-color: black;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    width: 10%;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+ .player1-score {
+    text-align: center;
+    grid-column-start: 2;
+    grid-row-start: 1;
+  
+    background-color: white;
 
 }
 
-.player-2 {
+.player2-score {
+    text-align: center;
+    grid-column-start: 2;
+    grid-row-start: 2;
+    background-color: white;
+} 
+.player1-team {
+    height: 50px;
     width: 100%;
-    padding: 50px;
-    height: 200px;
-
-} */
-
+    grid-column-start: 1;
+    grid-row-start: 1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    
+}
+.player2-team {
+    height: 50px;
+    width: 100%;
+    grid-column-start: 1;
+    grid-row-start: 2;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: white;
+}
 .winner {
     width: 100%;
     padding: 50px;
     height: 200px; 
-    color: red;
     border-radius: 50%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -70,7 +102,7 @@ body {
     font-size: 50px;
     text-align: center;
     transform: translate3d(0, 0, 0);
-    animation:spin 1s linear 5;
+    animation:spin 1s linear infinite;
 }
 
 @keyframes spin{

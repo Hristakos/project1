@@ -14,7 +14,7 @@ const winningCombinations = [
 
 let player1 = {
     selections: [],
-    imgSrc: "url(images/Collingwood.png)",
+    imgSrc: "url(images/Adelaide.png)",
     score: 0
 }
 
@@ -38,6 +38,14 @@ let draw = 0;
 
 let selectionAreas = document.querySelectorAll(".selection-area");
 let playAgainBtn = document.querySelector(".play-again-btn");
+let player1Team = document.querySelector(".player1-team");
+let player1Score = document.querySelector(".player1-score");
+let player2Team = document.querySelector(".player2-team");
+let player2Score = document.querySelector(".player2-score");
+
+
+player1Team.style.backgroundImage = player1.imgSrc;
+player2Team.style.backgroundImage = player2.imgSrc;
 
 let handleSelectionAreaClick = function (e) {
 
@@ -89,8 +97,13 @@ let handlePlayAgainBtnClick = function () {
     console.log('start button clicked');
     selectionAreas.forEach(function (selectionArea) {
         console.log("hello")
-        selectionArea.classList.contains("winner") ? selectionArea.classList.replace("winner", "selection-area") : console.log("replace");
-        selectionArea.classList.contains("selection-area") ? console.log("donothing") : selectionArea.classList.add("selection-area");
+        if (selectionArea.classList.contains("winner")) {
+            selectionArea.classList.replace("winner", "selection-area");
+        }
+        if (selectionArea.classList.contains("selection-area")) {
+            selectionArea.classList.add("selection-area");
+        }
+
 
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.textContent = "";
@@ -147,8 +160,11 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
 
             if (isPlayer1) {
                 player1.score += 1;
+                player1Score.textContent = player1.score;
+                console.log("player 1 score = " + player1.score);
             } else {
                 player2.score += 1;
+                player2Score.textContent = player2.score;
             }
 
             playAgainBtn.disabled = false;
