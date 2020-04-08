@@ -55,7 +55,7 @@ body {
     justify-content: center;
     background-color: white;
 }
- .player1-score {
+ .home-score {
     text-align: center;
     grid-column-start: 2;
     grid-row-start: 1;
@@ -64,13 +64,13 @@ body {
 
 }
 
-.player2-score {
+.away-score {
     text-align: center;
     grid-column-start: 2;
     grid-row-start: 2;
     background-color: white;
 } 
-.player1-team {
+.home-team-logo {
     height: 50px;
     width: 100%;
     grid-column-start: 1;
@@ -81,7 +81,7 @@ body {
     background-color: white;
     
 }
-.player2-team {
+.away-team-logo {
     height: 50px;
     width: 100%;
     grid-column-start: 1;
@@ -108,6 +108,14 @@ body {
 @keyframes spin{
 	from{transform:rotate(0deg)}
 	to{transform:rotate(360deg)}	
+}
+
+select {
+    height: 100px;
+}
+option {
+    height: 100px;
+    list-style: unset;
 }
 
 
