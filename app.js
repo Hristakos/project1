@@ -14,12 +14,12 @@ const winningCombinations = [
 
 let player1 = {
     selections: [],
-    backgroudImage: "url('images/Collingwood.png')"
+    imgSrc: "url(images/Collingwood.png)"
 }
 
 let player2 = {
     selections: [],
-    backgroudImage: "url('images/Carlton.png')"
+    imgSrc: "url(images/Carlton.png)"
 }
 
 isPlayer1 = true;
@@ -33,30 +33,38 @@ let attempts = 0;
 let selectionAreas = document.querySelectorAll(".selection-area");
 
 let handleSelectionAreaClick = function (e) {
+
+    // remove click event listerner for selected are so can't click again
+    e.target.removeEventListener("click", handleSelectionAreaClick);
+    // to keep track of how many goes are left
     attempts += 1;
-    console.log(e.target.dataset.ref)
+
+    // To store the winning combination to display the winning selections
     let winningCombination = [];
+
+    // The board position that has been selected
     const boardPosition = Number(e.target.dataset.ref)
 
+    // Check which player has been selected and update the slected area with the symbol for that player
     if (isPlayer1) {
-        e.target.classList.replace("selection-area", "player-1");
-        e.target.style.backgroundImage = player1.backgroudImage;
+        e.target.style.backgroundImage = player1.imgSrc;
         player1.selections.push(boardPosition)
         winningCombination = checkSelectionsForWinningCombination(player1.selections);
         isPlayer1 = false;
     } else {
-        e.target.classList.replace("selection-area", "player-2");
-        e.target.style.backgroundImage = player2.backgroudImage;
+        e.target.style.backgroundImage = player2.imgSrc;
         player2.selections.push(boardPosition)
         winningCombination = checkSelectionsForWinningCombination(player2.selections);
         isPlayer1 = true;
     }
-
+    // If we have a winning combination display the 3 selected areas that make the win
+    // and change the back ground image to winner
+    // clear all remaining click event listerners for unselected areas to stop the game 
     if (winningCombination) {
         winningCombination.forEach(function (selection) {
             console.log(selection);
             selectionAreas[selection].classList = ["winner"];
-            //selectionAreas[selection].style.backgroundImage = "url('images/cup.jpeg')"
+            selectionAreas[selection].textContent = "Winner";
 
             document.querySelectorAll(".selection-area").forEach(function (selectionArea) {
                 selectionArea.removeEventListener('click', handleSelectionAreaClick);
@@ -64,7 +72,8 @@ let handleSelectionAreaClick = function (e) {
         })
 
     }
-    e.target.removeEventListener("click", handleSelectionAreaClick);
+
+
 }
 
 selectionAreas.forEach(function (selectionArea) {
