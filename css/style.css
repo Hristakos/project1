@@ -13,16 +13,18 @@ body {
     background-color: green;
     border-top-left-radius: 25%;
     border-top-right-radius: 25%;
+    grid-gap: 1%;
 }
 
 .selection-area {
     width: 100%;
-
     height: 200px;
-    background: url(../images/afl.jpeg) center center no-repeat;
+    background: url(../images/afl.jpeg) center center;
+    background-repeat: no-repeat;
     background-size: cover;
     transition: all .3s ease-in-out;
     border-radius: 50%;
+    margin-top: 10px;
 }
 .goal-post {
     background-color: white;
@@ -60,11 +62,20 @@ body {
     width: 100%;
     padding: 50px;
     height: 200px; 
-    border-radius: 50%;
-    background-repeat: round;
     color: red;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     font-size: 50px;
     text-align: center;
+    transform: translate3d(0, 0, 0);
+    animation:spin 1s linear 5;
+}
+
+@keyframes spin{
+	from{transform:rotate(0deg)}
+	to{transform:rotate(360deg)}	
 }
 
 

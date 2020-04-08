@@ -26,6 +26,11 @@ if so end game.
 if total player 1 and player 2 selections are = Max attempts (3 * 3) we have a draw
 if not repeat.
 
+score: intiaial to zero;
+if player1 wins add to player 1
+if player2 wins add to player 2
+draw add to draw tally
+
 
 
 # Design

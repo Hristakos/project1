@@ -14,12 +14,14 @@ const winningCombinations = [
 
 let player1 = {
     selections: [],
-    imgSrc: "url(images/Collingwood.png)"
+    imgSrc: "url(images/Collingwood.png)",
+    score: 0
 }
 
 let player2 = {
     selections: [],
-    imgSrc: "url(images/Carlton.png)"
+    imgSrc: "url(images/Carlton.png)",
+    score: 0
 }
 
 isPlayer1 = true;
@@ -27,10 +29,15 @@ isPlayer1 = true;
 const maxAttempts = 9;
 let gameResult = "";
 let attempts = 0;
+
+let draw = 0;
+
+
 // TODO: Get Input
 
 
 let selectionAreas = document.querySelectorAll(".selection-area");
+let playAgainBtn = document.querySelector(".play-again-btn");
 
 let handleSelectionAreaClick = function (e) {
 
@@ -64,8 +71,6 @@ let handleSelectionAreaClick = function (e) {
         winningCombination.forEach(function (selection) {
             console.log(selection);
             selectionAreas[selection].classList = ["winner"];
-            selectionAreas[selection].textContent = "Winner";
-
             document.querySelectorAll(".selection-area").forEach(function (selectionArea) {
                 selectionArea.removeEventListener('click', handleSelectionAreaClick);
             })
@@ -80,12 +85,31 @@ selectionAreas.forEach(function (selectionArea) {
     selectionArea.addEventListener('click', handleSelectionAreaClick);
 })
 
+let handlePlayAgainBtnClick = function () {
+    console.log('start button clicked');
+    selectionAreas.forEach(function (selectionArea) {
+        console.log("hello")
+        selectionArea.classList.contains("winner") ? selectionArea.classList.replace("winner", "selection-area") : console.log("replace");
+        selectionArea.classList.contains("selection-area") ? console.log("donothing") : selectionArea.classList.add("selection-area");
+
+        selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
+        selectionArea.textContent = "";
+        selectionArea.addEventListener('click', handleSelectionAreaClick);
+
+    })
+    player1.selections = [];
+    player2.selections = [];
+    playAgainBtn.disabled = true;
+    attempts = 0;
+}
+
+playAgainBtn.addEventListener('click', handlePlayAgainBtnClick)
+
 console.log(selectionAreas);
 
 const winningScore = 3;
 const minSelections = 3;
-// if player 1 selections 3 or more check if player 1 has 
-//a winning combination
+
 
 
 
@@ -118,14 +142,23 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             winningCombinationIndex += 1;
 
         }
-
+        // If we have a winning combination return combination
         if (matches === winningScore) {
-            isPlayer1 ? console.log("Winner is player 1!") :
-                console.log("Winner is player 2!")
+
+            if (isPlayer1) {
+                player1.score += 1;
+            } else {
+                player2.score += 1;
+            }
+
+            playAgainBtn.disabled = false;
+
             return matchingCombination;
 
         } else if (attempts === maxAttempts) {
             console.log("We have a draw");
+            draw += 1;
+            playAgainBtn.disabled = false;
 
         }
 
