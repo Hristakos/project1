@@ -1,6 +1,6 @@
-console.log("Tic Tac Toe");
-
-
+/*
+    These are the winning combinations
+*/
 const winningCombinations = [
     [0, 1, 2],
     [0, 3, 6],
@@ -10,7 +10,11 @@ const winningCombinations = [
     [2, 5, 8],
     [3, 4, 5],
     [6, 7, 8]
-]
+];
+
+/*
+    List of all the teams and their names
+*/
 let teams = [
     {
         name: "Adelaide Crows",
@@ -41,7 +45,7 @@ let teams = [
         imgSrc: "url(images/Fremantle.png)"
     },
     {
-        name: "Geelong",
+        name: "Geelong Cats",
         imgSrc: "url(images/Geelong.png)"
     },
     {
@@ -85,33 +89,50 @@ let teams = [
         imgSrc: "url(images/West-Coast.png)"
     },
 
-]
+];
+
+/* 
+    home team and away teams to store data required
+    to workout if we have a winner
+*/
 let homeTeam = {
     name: "",
     selections: [],
     imgSrc: "",
     score: 0
-}
+};
 
 let awayTeam = {
     name: "",
     selections: [],
     imgSrc: "",
     score: 0
-}
+};
 
-isHome = true;
+/* 
+    This is used to alternate between teams
+    Home team will always start first in the sequence
+    of matches and then it will alternate between which team
+    had the last turn before a result of win or draw if a
+    team selection changes will start a new sequence of matches 
+    and home team will go first.
+*/
+isHomeTeam = true;
 
+/*
+    Thes variables are used to determine what the game status is
+    if we have used up all the attempts
+*/
 const maxAttempts = 9;
 let attempts = 0;
-
 let draw = 0;
 let homeTeamInput = "";
 let awayTeamInput = "";
 
-// TODO: Get Input
-
-
+/*
+    DOM objects required to change the status of the game.
+    update the screen display.
+*/
 let selectionAreas = document.querySelectorAll(".selection-area");
 let rematchBtn = document.querySelector(".rematch-btn");
 let homeTeamLogo = document.querySelector(".home-team-logo");
@@ -123,40 +144,54 @@ let awayTeamSelect = document.querySelector(".away-team");
 let displayGameResult = document.querySelector(".display-game-result");
 let slideText = document.querySelector(".slide-Text");
 
+/*
+    Sound to play when a result has occured
+*/
 let playSiren = function () {
-
-    var audio = new Audio('sounds/siren.m4a');
+    let audio = new Audio('sounds/siren.m4a');
     audio.play();
-}
+};
 
-
-
+/*
+    Create the home team selections List
+    and add to home team select object
+*/
 teams.forEach(function (team) {
     option = document.createElement("option");
     option.value = team.imgSrc;
     option.text = team.name;
-    console.log("imgsrc select home team = " + option.value);
     homeTeamSelect.appendChild(option);
 });
+
+/*
+    Create the away team selections List
+    and add to away team select object
+*/
 teams.forEach(function (team) {
     var option = document.createElement("option");
     option.value = team.imgSrc;
     option.text = team.name;
-    console.log("imgsrc select away team = " + option.value);
     awayTeamSelect.appendChild(option);
 });
 
-
+/*
+    Removes the click event listernery from the selection areas
+    to prevent from reselecting.
+*/
 let removeSelectionAreaActiveListeners = function () {
     document.querySelectorAll(".selection-area").forEach(function (selectionArea) {
         selectionArea.removeEventListener('click', handleSelectionAreaClick);
     })
-}
+};
 
+/*
+    to handle click event on selection area
+
+*/
 let handleSelectionAreaClick = function (e) {
     // if we don't have 2 selections
     if (homeTeamInput === "" || awayTeamInput === "") {
-        console.log("guard");
+
         return;
     }
     // remove click event listerner for selected are so can't click again
@@ -170,99 +205,94 @@ let handleSelectionAreaClick = function (e) {
     // The board position that has been selected
     const boardPosition = Number(e.target.dataset.ref)
 
-    // Check which player has been selected and update the slected area with the symbol for that player
-    if (isHome) {
+    // Check which team has been selected and update the selected area with the team img for that team
+    if (isHomeTeam) {
         e.target.style.backgroundImage = homeTeam.imgSrc;
-        homeTeam.selections.push(boardPosition)
+        homeTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(homeTeam.selections);
-        isHome = false;
+        isHomeTeam = false;
     } else {
         e.target.style.backgroundImage = awayTeam.imgSrc;
-        awayTeam.selections.push(boardPosition)
+        awayTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(awayTeam.selections);
-        isHome = true;
+        isHomeTeam = true;
     }
     // If we have a winning combination display the 3 selected areas that make the win
     // and change the back ground image to winner
     // clear all remaining click event listerners for unselected areas to stop the game 
     if (winningCombination) {
         winningCombination.forEach(function (selection) {
-            console.log(selection);
             selectionAreas[selection].classList = ["winner"];
 
         })
 
     }
-
-
 }
+
+/*
+    Resets all the data back to initial state it invoked when a selected team has changed.
+*/
 let resetGame = function () {
     homeTeam.score = 0;
     awayTeam.score = 0;
-
     attempts = 0;
     homeScore.textContent = 0;
     awayScore.textContent = 0;
+
     removeSelectionAreaActiveListeners();
+
     selectionAreas.forEach(function (selectionArea) {
         if (selectionArea.classList.contains("winner")) {
             selectionArea.classList.replace("winner", "selection-area");
         }
-
-
-
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
-    })
-
+    });
 
     homeTeam.selections = [];
     awayTeam.selections = [];
     rematchBtn.disabled = true;
     rematchBtn.style.opacity = 0;
-    // rematchBtn.hidden = true;
     displayGameResult.textContent = "";
     displayGameResult.style.opacity = 0;
+};
 
-
-
-
-}
-
-let handlerematchBtnClick = function () {
-    console.log('start button clicked');
+/*
+    Resets the game boars but we still keep tally of scores as its a rematch not
+    a new game.
+*/
+let handleRematchBtnClick = function () {
     selectionAreas.forEach(function (selectionArea) {
-        console.log("hello")
         if (selectionArea.classList.contains("winner")) {
             selectionArea.classList.replace("winner", "selection-area");
         }
 
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
+    });
 
-    })
     homeTeam.selections = [];
     awayTeam.selections = [];
     rematchBtn.disabled = true;
-    // rematchBtn.hidden = true;
     rematchBtn.style.opacity = 0;
     displayGameResult.textContent = "";
     displayGameResult.style.opacity = 0;
     attempts = 0;
 
-}
+};
 
-
+/*
+    First we set the home team to be first play
+    If the remove home team from opposing teams list
+    add event listerners to selection areas
+*/
 let handleHomeTeamChange = function (e) {
-
+    isHomeTeam = true;
     if (homeTeamInput !== "") {
         resetGame();
         document.querySelectorAll(".away-team  option").forEach(function (team) {
-            console.log("home team = " + team.value)
             if (team.value === e.target.value) {
-                console.log("home team = " + team.value)
-                console.log("home team input = " + homeTeamInput)
                 team.hidden = true;
             } else {
                 team.hidden = false;
@@ -271,22 +301,15 @@ let handleHomeTeamChange = function (e) {
 
     }
     homeTeamInput = e.target.value;
-    // homeTeam.name = e.target.textContent;
-    console.log("home e.target" + e.target);
     homeTeam.imgSrc = homeTeamInput;
     homeTeam.name = e.target.selectedOptions[0].text;
-    console.log(homeTeamInput);
     homeTeamLogo.style.backgroundImage = homeTeamInput;
 
     document.querySelectorAll(".away-team  option").forEach(function (team) {
-        console.log("home team = " + team.value)
         if (team.value === homeTeamInput) {
-            console.log("home team = " + team.value)
-            console.log("home team input = " + homeTeamInput)
             team.hidden = true;
         }
     })
-
 
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
@@ -295,15 +318,12 @@ let handleHomeTeamChange = function (e) {
 }
 
 let handleAwayTeamChange = function (e) {
-
+    isHomeTeam = true;
     // if we already have a value want to reset the game totals as we are starting a new match
     if (awayTeamInput !== "") {
         resetGame();
         document.querySelectorAll(".home-team  option").forEach(function (team) {
-            console.log("home team = " + team.value)
             if (team.value === e.target.value) {
-                console.log("home team = " + team.value)
-                console.log("home team input = " + homeTeamInput)
                 team.hidden = true;
             } else {
                 team.hidden = false;
@@ -311,19 +331,13 @@ let handleAwayTeamChange = function (e) {
         })
     }
     awayTeamInput = e.target.value;
-
-    console.log("away e.target" + e.target.text);
-    // awayTeam.name = e.target.textContent;
     awayTeam.imgSrc = awayTeamInput;
     awayTeam.name = e.target.selectedOptions[0].text;
-    //awayTeam.name = "test away team";
-    console.log(awayTeamInput);
     awayTeamLogo.style.backgroundImage = awayTeamInput;
 
     document.querySelectorAll(".home-team  option").forEach(function (team) {
         if (team.value === awayTeamInput) {
             team.hidden = true;
-            console.log("team hidden = " + team.hidden)
         }
     })
 
@@ -332,17 +346,22 @@ let handleAwayTeamChange = function (e) {
     })
 }
 
-rematchBtn.addEventListener('click', handlerematchBtnClick);
+/* 
+    Add event listerners
+*/
+rematchBtn.addEventListener('click', handleRematchBtnClick);
 homeTeamSelect.addEventListener("change", handleHomeTeamChange);
 awayTeamSelect.addEventListener("change", handleAwayTeamChange);
-console.log(selectionAreas);
 
+/*
+    used for game logic
+*/
 const winningScore = 3;
 const minSelections = 3;
 
-
-
-
+/*
+    This is where the game rules area applied.
+*/
 
 let checkSelectionsForWinningCombination = function (playerSelections) {
     let matches = 0;
@@ -355,10 +374,10 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             matchingCombination = [];
             let playerSelectionsIndex = 0;
             matches = 0;
-            // console.log("1st while");
+
             // while no winning combination and haven't finished checking all selections
             while (matches < winningScore && playerSelectionsIndex < playerSelections.length) {
-                // console.log("2nd while")
+
                 let winningCombination = winningCombinations[winningCombinationIndex];
                 let playerSelection = playerSelections[playerSelectionsIndex]
                 // check if current selection is part of winning combination
@@ -377,10 +396,9 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
         // If we have a winning combination return combination
         if (matches === winningScore) {
 
-            if (isHome) {
+            if (isHomeTeam) {
                 homeTeam.score += 1;
                 homeScore.textContent = homeTeam.score;
-                console.log("player 1 score = " + homeTeam.score);
                 resultText = `CONGRATULATIONS TO THE ${homeTeam.name}`;
             } else {
                 awayTeam.score += 1;
@@ -397,7 +415,6 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             return matchingCombination;
 
         } else if (attempts === maxAttempts) {
-            console.log("We have a draw");
             draw += 1;
             rematchBtn.disabled = false;
             rematchBtn.style.opacity = 1;
