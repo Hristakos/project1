@@ -87,21 +87,22 @@ let teams = [
 
 ]
 let homeTeam = {
+    name: "",
     selections: [],
-    imgSrc: "url(images/Adelaide.png)",
+    imgSrc: "",
     score: 0
 }
 
 let awayTeam = {
+    name: "",
     selections: [],
-    imgSrc: "url(images/Carlton.png)",
+    imgSrc: "",
     score: 0
 }
 
 isHome = true;
 
 const maxAttempts = 9;
-let gameResult = "";
 let attempts = 0;
 
 let draw = 0;
@@ -112,14 +113,22 @@ let awayTeamInput = "";
 
 
 let selectionAreas = document.querySelectorAll(".selection-area");
-let playAgainBtn = document.querySelector(".play-again-btn");
+let rematchBtn = document.querySelector(".rematch-btn");
 let homeTeamLogo = document.querySelector(".home-team-logo");
 let homeScore = document.querySelector(".home-score");
 let awayTeamLogo = document.querySelector(".away-team-logo");
 let awayScore = document.querySelector(".away-score");
-
 let homeTeamSelect = document.querySelector(".home-team");
 let awayTeamSelect = document.querySelector(".away-team");
+let displayGameResult = document.querySelector(".display-game-result");
+let slideText = document.querySelector(".slide-Text");
+
+let playSiren = function () {
+
+    var audio = new Audio('sounds/siren.m4a');
+    audio.play();
+}
+
 
 
 teams.forEach(function (team) {
@@ -127,7 +136,6 @@ teams.forEach(function (team) {
     option.value = team.imgSrc;
     option.text = team.name;
     console.log("imgsrc select home team = " + option.value);
-    //option.style = `background-image:${team.imgSrc};`;
     homeTeamSelect.appendChild(option);
 });
 teams.forEach(function (team) {
@@ -135,7 +143,6 @@ teams.forEach(function (team) {
     option.value = team.imgSrc;
     option.text = team.name;
     console.log("imgsrc select away team = " + option.value);
-    //option.style = `background-image:${team.imgSrc}`;
     awayTeamSelect.appendChild(option);
 });
 
@@ -147,7 +154,11 @@ let removeSelectionAreaActiveListeners = function () {
 }
 
 let handleSelectionAreaClick = function (e) {
-
+    // if we don't have 2 selections
+    if (homeTeamInput === "" || awayTeamInput === "") {
+        console.log("guard");
+        return;
+    }
     // remove click event listerner for selected are so can't click again
     e.target.removeEventListener("click", handleSelectionAreaClick);
     // to keep track of how many goes are left
@@ -188,12 +199,12 @@ let handleSelectionAreaClick = function (e) {
 let resetGame = function () {
     homeTeam.score = 0;
     awayTeam.score = 0;
+
     attempts = 0;
     homeScore.textContent = 0;
     awayScore.textContent = 0;
     removeSelectionAreaActiveListeners();
     selectionAreas.forEach(function (selectionArea) {
-        console.log("hello")
         if (selectionArea.classList.contains("winner")) {
             selectionArea.classList.replace("winner", "selection-area");
         }
@@ -204,14 +215,22 @@ let resetGame = function () {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
     })
+
+
     homeTeam.selections = [];
     awayTeam.selections = [];
-    playAgainBtn.disabled = true;
+    rematchBtn.disabled = true;
+    rematchBtn.style.opacity = 0;
+    // rematchBtn.hidden = true;
+    displayGameResult.textContent = "";
+    displayGameResult.style.opacity = 0;
+
+
 
 
 }
 
-let handlePlayAgainBtnClick = function () {
+let handlerematchBtnClick = function () {
     console.log('start button clicked');
     selectionAreas.forEach(function (selectionArea) {
         console.log("hello")
@@ -225,8 +244,13 @@ let handlePlayAgainBtnClick = function () {
     })
     homeTeam.selections = [];
     awayTeam.selections = [];
-    playAgainBtn.disabled = true;
+    rematchBtn.disabled = true;
+    // rematchBtn.hidden = true;
+    rematchBtn.style.opacity = 0;
+    displayGameResult.textContent = "";
+    displayGameResult.style.opacity = 0;
     attempts = 0;
+
 }
 
 
@@ -247,26 +271,27 @@ let handleHomeTeamChange = function (e) {
 
     }
     homeTeamInput = e.target.value;
+    // homeTeam.name = e.target.textContent;
+    console.log("home e.target" + e.target);
     homeTeam.imgSrc = homeTeamInput;
+    homeTeam.name = e.target.selectedOptions[0].text;
     console.log(homeTeamInput);
     homeTeamLogo.style.backgroundImage = homeTeamInput;
 
-    if (awayTeamInput === "") {
-        document.querySelectorAll(".away-team  option").forEach(function (team) {
+    document.querySelectorAll(".away-team  option").forEach(function (team) {
+        console.log("home team = " + team.value)
+        if (team.value === homeTeamInput) {
             console.log("home team = " + team.value)
-            if (team.value === homeTeamInput) {
-                console.log("home team = " + team.value)
-                console.log("home team input = " + homeTeamInput)
-                team.hidden = true;
-            }
-        })
+            console.log("home team input = " + homeTeamInput)
+            team.hidden = true;
+        }
+    })
 
-    } else {
 
-        selectionAreas.forEach(function (selectionArea) {
-            selectionArea.addEventListener('click', handleSelectionAreaClick);
-        })
-    }
+    selectionAreas.forEach(function (selectionArea) {
+        selectionArea.addEventListener('click', handleSelectionAreaClick);
+
+    })
 }
 
 let handleAwayTeamChange = function (e) {
@@ -286,28 +311,28 @@ let handleAwayTeamChange = function (e) {
         })
     }
     awayTeamInput = e.target.value;
+
+    console.log("away e.target" + e.target.text);
+    // awayTeam.name = e.target.textContent;
     awayTeam.imgSrc = awayTeamInput;
+    awayTeam.name = e.target.selectedOptions[0].text;
+    //awayTeam.name = "test away team";
     console.log(awayTeamInput);
     awayTeamLogo.style.backgroundImage = awayTeamInput;
 
+    document.querySelectorAll(".home-team  option").forEach(function (team) {
+        if (team.value === awayTeamInput) {
+            team.hidden = true;
+            console.log("team hidden = " + team.hidden)
+        }
+    })
 
-    if (homeTeamInput === "") {
-        document.querySelectorAll(".home-team  option").forEach(function (team) {
-            if (team.value === awayTeamInput) {
-                team.hidden = true;
-                console.log("team hidden = " + team.hidden)
-            }
-        })
-
-    } else {
-
-        selectionAreas.forEach(function (selectionArea) {
-            selectionArea.addEventListener('click', handleSelectionAreaClick);
-        })
-    }
+    selectionAreas.forEach(function (selectionArea) {
+        selectionArea.addEventListener('click', handleSelectionAreaClick);
+    })
 }
 
-playAgainBtn.addEventListener('click', handlePlayAgainBtnClick);
+rematchBtn.addEventListener('click', handlerematchBtnClick);
 homeTeamSelect.addEventListener("change", handleHomeTeamChange);
 awayTeamSelect.addEventListener("change", handleAwayTeamChange);
 console.log(selectionAreas);
@@ -348,6 +373,7 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             winningCombinationIndex += 1;
 
         }
+        let resultText = "";
         // If we have a winning combination return combination
         if (matches === winningScore) {
 
@@ -355,20 +381,31 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
                 homeTeam.score += 1;
                 homeScore.textContent = homeTeam.score;
                 console.log("player 1 score = " + homeTeam.score);
+                resultText = `CONGRATULATIONS TO THE ${homeTeam.name}`;
             } else {
                 awayTeam.score += 1;
                 awayScore.textContent = awayTeam.score;
+                resultText = `CONGRATULATIONS TO THE ${awayTeam.name}`;
             }
-
-            playAgainBtn.disabled = false;
+            displayGameResult.style.opacity = 1;
+            displayGameResult.textContent = resultText.toUpperCase();
+            rematchBtn.disabled = false;
+            rematchBtn.style.opacity = 1;
+            // rematchBtn.hidden = false;
             removeSelectionAreaActiveListeners();
+            playSiren();
             return matchingCombination;
 
         } else if (attempts === maxAttempts) {
             console.log("We have a draw");
             draw += 1;
-            playAgainBtn.disabled = false;
+            rematchBtn.disabled = false;
+            rematchBtn.style.opacity = 1;
+            // rematchBtn.hidden = false;
             removeSelectionAreaActiveListeners();
+            playSiren();
+            displayGameResult.style.opacity = 1;
+            displayGameResult.textContent = "WE HAVE A DRAW";
 
         }
 
