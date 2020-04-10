@@ -33,8 +33,8 @@ let teams = [
     },
     {
         name: "Carton Blues",
-        imgSrc: "url(images/Carlton.svg)",
-        scoreboardImg: "images/Carlton.svg"
+        imgSrc: "url(images/carlton.svg)",
+        scoreboardImg: "images/carlton.svg"
     },
     {
         name: "Collingwood Magpies",
@@ -117,16 +117,14 @@ let homeTeam = {
     name: "",
     selections: [],
     imgSrc: "",
-    score: 0,
-    logo: ""
+    score: 0
 };
 
 let awayTeam = {
     name: "",
     selections: [],
     imgSrc: "",
-    score: 0,
-    logo: ""
+    score: 0
 };
 
 /* 
