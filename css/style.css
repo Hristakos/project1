@@ -23,7 +23,6 @@ body {
 .game-container {
     display: grid;
     grid-template-rows: 1fr .5fr 4fr;
-    grid-gap: 50px;
     align-items: center; 
 }
 
@@ -60,7 +59,6 @@ body {
     grid-template-columns: 1fr 5fr 1fr 5fr 1fr 5fr 1fr;
     border-top-left-radius: 25%;
     border-top-right-radius: 25%;
-    grid-gap: 1%;
     opacity: 1  .5;
  
 }
