@@ -3,7 +3,7 @@
 }
 
 body {
-    background-image: url("../images/crowd.webp");
+    background-image: url("../images/background.png");
     background-repeat: no-repeat;
     background-size: cover;
     /* background-blend-mode: lighten; */
@@ -94,8 +94,8 @@ body {
 .goal-post {
     background-color: white;
     height: 100%;
-    width: 25%;
-    margin: 0 25%;
+    width: 20%;
+    margin: 0 40%;
 }
 .behind-post-container {
     display: grid;
@@ -105,8 +105,8 @@ body {
     grid-row-start: 2;
     background-color: white;
     height: 100%;
-    width: 25%;
-    margin: 0 25%;
+    width: 20%;
+    margin: 0 40%;
   
 }
 .score-board {

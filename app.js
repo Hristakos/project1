@@ -62,7 +62,7 @@ let teams = [
         scoreboardImg: "images/Gold-Coast.svg"
     },
     {
-        name: "Greater Western Sydney",
+        name: "Greater Western Sydney Giants",
         imgSrc: "url(images/GWS.svg)",
         scoreboardImg: "images/GWS.svg"
     },
@@ -320,16 +320,26 @@ let handleHomeTeamChange = function (e) {
         resetGame();
         document.querySelectorAll(".away-team  option").forEach(function (team) {
             if (team.value === e.target.value) {
-                team.hidden = true;
+                team.disabled = true;
             } else {
-                team.hidden = false;
+                team.disabled = false;
             }
         })
 
     }
     homeTeamInput = e.target.value;
     homeTeam.imgSrc = homeTeamInput;
-    homeTeam.name = e.target.selectedOptions[0].text;
+    // homeTeam.name = e.target.selectedOptions[0].text;
+
+    if (e.target.options.selectedIndex === 0) {
+        homeTeamLogo.src = "";
+        homeTeam.name = "";
+        homeTeam.imgSrc = "";
+        homeTeam.score = 0;
+        homeTeam.selections = [];
+    } else {
+        homeTeam.name = teams[e.target.options.selectedIndex - 1].name;
+    }
     //homeTeamLogo.style.backgroundImage = homeTeamInput;
     teams.forEach(function (team) {
         if (team.imgSrc === homeTeamInput) {
@@ -340,7 +350,9 @@ let handleHomeTeamChange = function (e) {
 
     document.querySelectorAll(".away-team  option").forEach(function (team) {
         if (team.value === homeTeamInput) {
-            team.hidden = true;
+            team.disabled = true;
+        } else {
+            team.disabled = false;
         }
     })
 
@@ -351,22 +363,34 @@ let handleHomeTeamChange = function (e) {
 }
 
 let handleAwayTeamChange = function (e) {
+
+
     isHomeTeam = true;
     // if we already have a value want to reset the game totals as we are starting a new match
     if (awayTeamInput !== "") {
         resetGame();
         document.querySelectorAll(".home-team  option").forEach(function (team) {
             if (team.value === e.target.value) {
-                team.hidden = true;
+                team.disabled = true;
             } else {
-                team.hidden = false;
+                team.disabled = false;
             }
         })
     }
     awayTeamInput = e.target.value;
     awayTeam.imgSrc = awayTeamInput;
-    awayTeam.name = e.target.selectedOptions[0].text;
+    if (e.target.options.selectedIndex === 0) {
+        awayTeamLogo.src = "";
+        awayTeam.name = "";
+        awayTeam.imgSrc = "";
+        awayTeam.score = 0;
+        awayTeam.selections = [];
+    } else {
+        awayTeam.name = teams[e.target.options.selectedIndex - 1].name;
+    }
+
     // awayTeamLogo.style.backgroundImage = awayTeamInput;
+    //debugger
 
     teams.forEach(function (team) {
         if (team.imgSrc === awayTeamInput) {
@@ -376,7 +400,9 @@ let handleAwayTeamChange = function (e) {
 
     document.querySelectorAll(".home-team  option").forEach(function (team) {
         if (team.value === awayTeamInput) {
-            team.hidden = true;
+            team.disabled = true;
+        } else {
+            team.disabled = false;
         }
     })
 
