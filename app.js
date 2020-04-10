@@ -262,12 +262,12 @@ let resetGame = function () {
     removeSelectionAreaActiveListeners();
 
     selectionAreas.forEach(function (selectionArea) {
-        if (selectionArea.classList.contains("winner")) {
-            selectionArea.classList.replace("winner", "selection-area");
-        }
-        if (selectionArea.classList.contains("selection-area-clicked")) {
-            selectionArea.classList.replace("selection-area-clicked", "selection-area");
-        }
+        // if (selectionArea.classList.contains("winner")) {
+        //     selectionArea.classList.replace("winner", "selection-area");
+        // }
+        // if (selectionArea.classList.contains("selection-area-clicked")) {
+        //     selectionArea.classList.replace("selection-area-clicked", "selection-area");
+        // }
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
@@ -287,12 +287,7 @@ let resetGame = function () {
 */
 let handleRematchBtnClick = function () {
     selectionAreas.forEach(function (selectionArea) {
-        if (selectionArea.classList.contains("winner")) {
-            selectionArea.classList.replace("winner", "selection-area");
-        }
-        if (selectionArea.classList.contains("selection-area-clicked")) {
-            selectionArea.classList.replace("selection-area-clicked", "selection-area");
-        }
+        selectionArea.classList = ["selection-area"];
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
     });
@@ -481,6 +476,9 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             draw += 1;
             rematchBtn.disabled = false;
             rematchBtn.style.opacity = 1;
+            selectionAreas.forEach(function (selectionArea) {
+                selectionArea.classList.add("draw");
+            });
             // rematchBtn.hidden = false;
             removeSelectionAreaActiveListeners();
             playSiren();
