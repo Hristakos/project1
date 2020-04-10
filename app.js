@@ -18,75 +18,93 @@ const winningCombinations = [
 let teams = [
     {
         name: "Adelaide Crows",
-        imgSrc: "url(images/Adelaide.png)"
+        imgSrc: "url(images/Adelaide.svg)",
+        scoreboardImg: "images/Adelaide.svg"
     },
     {
         name: "Brisbane Lions",
-        imgSrc: "url(images/Brisbane.png)"
+        imgSrc: "url(images/Brisbane.svg)",
+        scoreboardImg: "images/Brisbane.svg"
     },
     {
         name: "Western Bulldogs",
-        imgSrc: "url(images/Bulldogs.png)"
+        imgSrc: "url(images/Western-Bulldogs.svg)",
+        scoreboardImg: "images/Western-Bulldogs.svg"
     },
     {
         name: "Carton Blues",
-        imgSrc: "url(images/Carlton.png)"
+        imgSrc: "url(images/Carlton.svg)",
+        scoreboardImg: "images/Carlton.svg"
     },
     {
         name: "Collingwood Magpies",
-        imgSrc: "url(images/Collingwood.png)"
+        imgSrc: "url(images/Collingwood.svg)",
+        scoreboardImg: "images/Collingwood.svg"
     },
     {
         name: "Essendon Bombers",
-        imgSrc: "url(images/Essendon.png)"
+        imgSrc: "url(images/Essendon.svg)",
+        scoreboardImg: "images/Essendon.svg"
     },
     {
-        name: "Freemantale Dockers",
-        imgSrc: "url(images/Fremantle.png)"
+        name: "Fremantale Dockers",
+        imgSrc: "url(images/Fremantle.svg)",
+        scoreboardImg: "images/Fremantle.svg"
     },
     {
         name: "Geelong Cats",
-        imgSrc: "url(images/Geelong.png)"
+        imgSrc: "url(images/Geelong.svg)",
+        scoreboardImg: "images/Geelong.svg"
     },
     {
         name: "Gold Coast Suns",
-        imgSrc: "url(images/Gold-Coast.png)"
+        imgSrc: "url(images/Gold-Coast.svg)",
+        scoreboardImg: "images/Gold-Coast.svg"
     },
     {
         name: "Greater Western Sydney",
-        imgSrc: "url(images/GWS.png)"
+        imgSrc: "url(images/GWS.svg)",
+        scoreboardImg: "images/GWS.svg"
     },
     {
         name: "Hawthorn Hawks",
-        imgSrc: "url(images/Hawthorn.jpg)"
+        imgSrc: "url(images/Hawthorn.svg)",
+        scoreboardImg: "images/Hawthorn.svg"
     },
     {
         name: "Melbourne Demons",
-        imgSrc: "url(images/Melbourne.png)"
+        imgSrc: "url(images/Melbourne.svg)",
+        scoreboardImg: "images/Melbourne.svg"
     },
     {
         name: "North Melbourne Kangaroos",
-        imgSrc: "url(images/North-Melbourne.png)"
+        imgSrc: "url(images/North-Melbourne.svg)",
+        scoreboardImg: "images/North-Melbourne.svg"
     },
     {
         name: "Port Adelaide Power",
-        imgSrc: "url(images/Port-Adelaide.jpg)"
+        imgSrc: "url(images/Port-Adelaide.svg)",
+        scoreboardImg: "images/Port-Adelaide.svg"
     },
     {
         name: "Richmond Tigers",
-        imgSrc: "url(images/Richmond.jpg)"
+        imgSrc: "url(images/Richmond.svg)",
+        scoreboardImg: "images/Richmond.svg"
     },
     {
         name: "St Kilda Saints",
-        imgSrc: "url(images/St-Kilda.png)"
+        imgSrc: "url(images/St-Kilda.svg)",
+        scoreboardImg: "images/St-Kilda.svg"
     },
     {
         name: "Sydney Swans",
-        imgSrc: "url(images/Sydney.png)"
+        imgSrc: "url(images/Sydney.svg)",
+        scoreboardImg: "images/Sydney.svg"
     },
     {
         name: "West Coast Eagles",
-        imgSrc: "url(images/West-Coast.png)"
+        imgSrc: "url(images/West-Coast-Eagles.svg)",
+        scoreboardImg: "images/West-Coast-Eagles.svg"
     },
 
 ];
@@ -99,14 +117,16 @@ let homeTeam = {
     name: "",
     selections: [],
     imgSrc: "",
-    score: 0
+    score: 0,
+    logo: ""
 };
 
 let awayTeam = {
     name: "",
     selections: [],
     imgSrc: "",
-    score: 0
+    score: 0,
+    logo: ""
 };
 
 /* 
@@ -156,6 +176,8 @@ let playSiren = function () {
     Create the home team selections List
     and add to home team select object
 */
+
+
 teams.forEach(function (team) {
     option = document.createElement("option");
     option.value = team.imgSrc;
@@ -204,7 +226,7 @@ let handleSelectionAreaClick = function (e) {
 
     // The board position that has been selected
     const boardPosition = Number(e.target.dataset.ref)
-
+    e.target.classList.replace("selection-area", "selection-area-clicked");
     // Check which team has been selected and update the selected area with the team img for that team
     if (isHomeTeam) {
         e.target.style.backgroundImage = homeTeam.imgSrc;
@@ -245,6 +267,9 @@ let resetGame = function () {
         if (selectionArea.classList.contains("winner")) {
             selectionArea.classList.replace("winner", "selection-area");
         }
+        if (selectionArea.classList.contains("selection-area-clicked")) {
+            selectionArea.classList.replace("selection-area-clicked", "selection-area");
+        }
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
@@ -267,7 +292,9 @@ let handleRematchBtnClick = function () {
         if (selectionArea.classList.contains("winner")) {
             selectionArea.classList.replace("winner", "selection-area");
         }
-
+        if (selectionArea.classList.contains("selection-area-clicked")) {
+            selectionArea.classList.replace("selection-area-clicked", "selection-area");
+        }
         selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
     });
@@ -303,7 +330,13 @@ let handleHomeTeamChange = function (e) {
     homeTeamInput = e.target.value;
     homeTeam.imgSrc = homeTeamInput;
     homeTeam.name = e.target.selectedOptions[0].text;
-    homeTeamLogo.style.backgroundImage = homeTeamInput;
+    //homeTeamLogo.style.backgroundImage = homeTeamInput;
+    teams.forEach(function (team) {
+        if (team.imgSrc === homeTeamInput) {
+            homeTeamLogo.src = team.scoreboardImg;
+            // homeTeamLogo
+        }
+    });
 
     document.querySelectorAll(".away-team  option").forEach(function (team) {
         if (team.value === homeTeamInput) {
@@ -333,7 +366,13 @@ let handleAwayTeamChange = function (e) {
     awayTeamInput = e.target.value;
     awayTeam.imgSrc = awayTeamInput;
     awayTeam.name = e.target.selectedOptions[0].text;
-    awayTeamLogo.style.backgroundImage = awayTeamInput;
+    // awayTeamLogo.style.backgroundImage = awayTeamInput;
+
+    teams.forEach(function (team) {
+        if (team.imgSrc === awayTeamInput) {
+            awayTeamLogo.src = team.scoreboardImg;
+        }
+    });
 
     document.querySelectorAll(".home-team  option").forEach(function (team) {
         if (team.value === awayTeamInput) {

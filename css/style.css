@@ -6,6 +6,8 @@ body {
     background-image: url("../images/crowd.webp");
     background-repeat: no-repeat;
     background-size: cover;
+    /* background-blend-mode: lighten; */
+  
 }
 .reload {
     display: grid;
@@ -59,6 +61,7 @@ body {
     border-top-left-radius: 25%;
     border-top-right-radius: 25%;
     grid-gap: 1%;
+    opacity: 1  .5;
  
 }
 .row-selections {
@@ -67,23 +70,31 @@ body {
     align-items: center;
     justify-content: center;
 }
-
+.selection-area-clicked {
+    width: 200px;
+    height: 200px;
+    transition: all .3s ease-in;
+}
 .selection-area {
-    width: 158px;
-    height: 89px;
-    background: url(../images/afl.jpeg) center center; 
+    width: 150px;
+    height: 100px;
+    background: url(../images/afl.png) center center; 
     background-repeat: no-repeat;
     background-size: cover;
-    transition: all .3s ease-in;
+    transition: all .1s ease-in;
     border-radius: 50%;
     margin: 10% 10%;
     cursor: pointer;
-    
+    /* position: relative; */    
+}
+.box {
+    width: 200px;
+    height: 200px;
 }
 .goal-post {
     background-color: white;
     height: 100%;
-    width:25%;
+    width: 25%;
     margin: 0 25%;
 }
 .behind-post-container {
@@ -99,8 +110,9 @@ body {
   
 }
 .score-board {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
     margin-left: 20%;
-    background-color: white;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -110,60 +122,73 @@ body {
     grid-column-start: 3;
   
 }
-.score-board {
-    font-family: 'Oswald', sans-serif;
-    font-size: 16px;
-}
+
  .home-score {
+    display: grid;
+    width: 100%;
+    align-items: center;
+     height: 75px;
     text-align: center;
     grid-column-start: 3;
     grid-row-start: 1;
-  
-    background-color: white;
-
 }
 
 .away-score {
+    display: grid;
+    width: 100%;
+    align-items: center;
+    height: 75px;
     text-align: center;
     grid-column-start: 3;
     grid-row-start: 2;
-    background-color: white;
 }
 .home-label {
+    display: grid;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 75px;
     text-align: center;
     grid-column-start: 1;
     grid-row-start: 1;
 }
-
-.home-team-logo {
-    height: 50px;
+.logo-container {
+    display: grid;
     width: 100%;
-    grid-column-start: 2;
-    grid-row-start: 1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: white;
+    height: 75px;
+    align-items: center;
+    justify-content: center;
     
 }
+.home-team-logo {
+    display: grid;
+    align-items: center;
+    width: 100%;
+    height: 75px;
+    grid-column-start: 2;
+    grid-row-start: 1;    
+}
+
 .away-label {
+    display: grid;
+    align-items: center;
+    width: 100%;
+    height: 75px;
     text-align: center;
     grid-column-start: 1;
     grid-row-start: 2;
 }
 .away-team-logo {
-    height: 50px;
+    display: grid;
+    align-items: center;
+    height: 75px;
     width: 100%;
     grid-column-start: 2;
     grid-row-start: 2;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-color: white;
 }
 .winner {
-    width: 158px;
-    height: 89px;
+    width: 200px;
+    height: 200px;
     margin: 10%;
     border-radius: 50%;
     background-repeat: no-repeat;
@@ -179,6 +204,7 @@ body {
 	from{transform:rotate(0deg)}
 	to{transform:rotate(360deg)}	
 }
+
 
 
 select {
