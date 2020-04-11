@@ -178,7 +178,7 @@ let playSiren = function () {
 
 teams.forEach(function (team) {
     option = document.createElement("option");
-    option.value = team.imgSrc;
+    option.value = team.scoreboardImg;
     option.text = team.name;
     homeTeamSelect.appendChild(option);
 });
@@ -189,7 +189,7 @@ teams.forEach(function (team) {
 */
 teams.forEach(function (team) {
     var option = document.createElement("option");
-    option.value = team.imgSrc;
+    option.value = team.scoreboardImg;
     option.text = team.name;
     awayTeamSelect.appendChild(option);
 });
@@ -227,12 +227,14 @@ let handleSelectionAreaClick = function (e) {
     e.target.classList.replace("selection-area", "selection-area-clicked");
     // Check which team has been selected and update the selected area with the team img for that team
     if (isHomeTeam) {
-        e.target.style.backgroundImage = homeTeam.imgSrc;
+        e.target.src = homeTeam.imgSrc;
+        // e.target.style.backgroundImage = homeTeam.imgSrc;
         homeTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(homeTeam.selections);
         isHomeTeam = false;
     } else {
-        e.target.style.backgroundImage = awayTeam.imgSrc;
+        // e.target.style.backgroundImage = awayTeam.imgSrc;
+        e.target.src = awayTeam.imgSrc;
         awayTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(awayTeam.selections);
         isHomeTeam = true;
@@ -268,7 +270,9 @@ let resetGame = function () {
         // if (selectionArea.classList.contains("selection-area-clicked")) {
         //     selectionArea.classList.replace("selection-area-clicked", "selection-area");
         // }
-        selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
+        selectionArea.classList = ["selection-area"];
+        selectionArea.src = "images/afl.png";
+        // selectionArea.style.backgroundImage = "url(images/afl.png)";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
     });
@@ -288,7 +292,8 @@ let resetGame = function () {
 let handleRematchBtnClick = function () {
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.classList = ["selection-area"];
-        selectionArea.style.backgroundImage = "url(images/afl.jpeg)";
+        // selectionArea.style.backgroundImage = "url(images/afl.png)";
+        selectionArea.src = "images/afl.png";
         selectionArea.addEventListener('click', handleSelectionAreaClick);
     });
 
@@ -320,6 +325,7 @@ let handleHomeTeamChange = function (e) {
         })
 
     }
+    // debugger
     homeTeamInput = e.target.value;
     homeTeam.imgSrc = homeTeamInput;
     // homeTeam.name = e.target.selectedOptions[0].text;
@@ -335,7 +341,7 @@ let handleHomeTeamChange = function (e) {
     }
     //homeTeamLogo.style.backgroundImage = homeTeamInput;
     teams.forEach(function (team) {
-        if (team.imgSrc === homeTeamInput) {
+        if (team.scoreboardImg === homeTeamInput) {
             homeTeamLogo.src = team.scoreboardImg;
             // homeTeamLogo
         }
@@ -383,10 +389,10 @@ let handleAwayTeamChange = function (e) {
     }
 
     // awayTeamLogo.style.backgroundImage = awayTeamInput;
-    //debugger
+    // debugger
 
     teams.forEach(function (team) {
-        if (team.imgSrc === awayTeamInput) {
+        if (team.scoreboardImg === awayTeamInput) {
             awayTeamLogo.src = team.scoreboardImg;
         }
     });
