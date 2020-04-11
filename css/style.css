@@ -66,7 +66,7 @@ body {
     grid-template-columns: 1fr 5fr 1fr 5fr 1fr 5fr 1fr;
     border-top-left-radius: 25%;
     border-top-right-radius: 25%;
-    opacity: 1  .5;
+    /* opacity: 1  .5; */
  
 }
 .row-selections {
@@ -99,18 +99,18 @@ body {
 .goal-post {
     background-color: white;
     height: 100%;
-    width: 20%;
+    width: 10px;
     margin: 0 40%;
 }
 .behind-post-container {
     display: grid;
-    grid-template-rows: 1fr 1.fr;
+    grid-template-rows: 1fr 1fr;
 }
 .behind-post {
     grid-row-start: 2;
     background-color: white;
     height: 100%;
-    width: 20%;
+    width: 10px;
     margin: 0 40%;
   
 }
