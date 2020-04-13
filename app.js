@@ -17,94 +17,94 @@ const winningCombinations = [
 */
 let teams = [
     {
-        name: "Adelaide Crows",
-        imgSrc: "url(images/Adelaide.svg)",
-        scoreboardImg: "images/Adelaide.svg"
+        name: "Adelaide",
+        nickName: "Crows",
+        imgSrc: "images/Adelaide.svg"
     },
     {
-        name: "Brisbane Lions",
-        imgSrc: "url(images/Brisbane.svg)",
-        scoreboardImg: "images/Brisbane.svg"
+        name: "Brisbane",
+        nickName: "Lions",
+        imgSrc: "images/Brisbane.svg"
     },
     {
         name: "Western Bulldogs",
-        imgSrc: "url(images/Western-Bulldogs.svg)",
-        scoreboardImg: "images/Western-Bulldogs.svg"
+        nickName: "Bulldogs",
+        imgSrc: "images/Western-Bulldogs.svg"
     },
     {
-        name: "Carton Blues",
-        imgSrc: "url(images/carlton.svg)",
-        scoreboardImg: "images/carlton.svg"
+        name: "Carton",
+        nickName: "Blues",
+        imgSrc: "images/carlton.svg"
     },
     {
-        name: "Collingwood Magpies",
-        imgSrc: "url(images/Collingwood.svg)",
-        scoreboardImg: "images/Collingwood.svg"
+        name: "Collingwood",
+        nickName: "Magpies",
+        imgSrc: "images/Collingwood.svg"
     },
     {
-        name: "Essendon Bombers",
-        imgSrc: "url(images/Essendon.svg)",
-        scoreboardImg: "images/Essendon.svg"
+        name: "Essendon",
+        nickName: "Bombers",
+        imgSrc: "images/Essendon.svg"
     },
     {
-        name: "Fremantale Dockers",
-        imgSrc: "url(images/Fremantle.svg)",
-        scoreboardImg: "images/Fremantle.svg"
+        name: "Fremantale",
+        nickName: "Dockers",
+        imgSrc: "images/Fremantle.svg"
     },
     {
-        name: "Geelong Cats",
-        imgSrc: "url(images/Geelong.svg)",
-        scoreboardImg: "images/Geelong.svg"
+        name: "Geelong",
+        nickName: "Cats",
+        imgSrc: "images/Geelong.svg"
     },
     {
-        name: "Gold Coast Suns",
-        imgSrc: "url(images/Gold-Coast.svg)",
-        scoreboardImg: "images/Gold-Coast.svg"
+        name: "Gold Coast",
+        nickName: "Suns",
+        imgSrc: "images/Gold-Coast.svg"
     },
     {
-        name: "Greater Western Sydney Giants",
-        imgSrc: "url(images/GWS.svg)",
-        scoreboardImg: "images/GWS.svg"
+        name: "Greater Western Sydney",
+        nickName: "Giants",
+        imgSrc: "images/GWS.svg"
     },
     {
-        name: "Hawthorn Hawks",
-        imgSrc: "url(images/Hawthorn.svg)",
-        scoreboardImg: "images/Hawthorn.svg"
+        name: "Hawthorn",
+        nickName: "Hawks",
+        imgSrc: "images/Hawthorn.svg"
     },
     {
-        name: "Melbourne Demons",
-        imgSrc: "url(images/Melbourne.svg)",
-        scoreboardImg: "images/Melbourne.svg"
+        name: "Melbourne",
+        nickName: "Demons",
+        imgSrc: "images/Melbourne.svg"
     },
     {
-        name: "North Melbourne Kangaroos",
-        imgSrc: "url(images/North-Melbourne.svg)",
-        scoreboardImg: "images/North-Melbourne.svg"
+        name: "North Melbourne",
+        nickName: "Kangaroos",
+        imgSrc: "images/North-Melbourne.svg"
     },
     {
-        name: "Port Adelaide Power",
-        imgSrc: "url(images/Port-Adelaide.svg)",
-        scoreboardImg: "images/Port-Adelaide.svg"
+        name: "Port Adelaide",
+        nickName: "Power",
+        imgSrc: "images/Port-Adelaide.svg"
     },
     {
-        name: "Richmond Tigers",
-        imgSrc: "url(images/Richmond.svg)",
-        scoreboardImg: "images/Richmond.svg"
+        name: "Richmond",
+        nickName: "Tigers",
+        imgSrc: "images/Richmond.svg"
     },
     {
-        name: "St Kilda Saints",
-        imgSrc: "url(images/St-Kilda.svg)",
-        scoreboardImg: "images/St-Kilda.svg"
+        name: "St Kilda",
+        nickName: "Saints",
+        imgSrc: "images/St-Kilda.svg"
     },
     {
-        name: "Sydney Swans",
-        imgSrc: "url(images/Sydney.svg)",
-        scoreboardImg: "images/Sydney.svg"
+        name: "Sydney",
+        nickName: "Swans",
+        imgSrc: "images/Sydney.svg"
     },
     {
-        name: "West Coast Eagles",
-        imgSrc: "url(images/West-Coast-Eagles.svg)",
-        scoreboardImg: "images/West-Coast-Eagles.svg"
+        name: "West Coast",
+        nickName: "Eagles",
+        imgSrc: "images/West-Coast-Eagles.svg"
     },
 
 ];
@@ -115,6 +115,7 @@ let teams = [
 */
 let homeTeam = {
     name: "",
+    nickName: "",
     selections: [],
     imgSrc: "",
     score: 0
@@ -122,6 +123,7 @@ let homeTeam = {
 
 let awayTeam = {
     name: "",
+    nickName: "",
     selections: [],
     imgSrc: "",
     score: 0
@@ -155,8 +157,10 @@ let awayTeamInput = "";
 let selectionAreas = document.querySelectorAll(".selection-area");
 let rematchBtn = document.querySelector(".rematch-btn");
 let homeTeamLogo = document.querySelector(".home-team-logo");
+let homeTeamScoreboardLabel = document.querySelector(".home-label");
 let homeScore = document.querySelector(".home-score");
 let awayTeamLogo = document.querySelector(".away-team-logo");
+let awayTeamScoreboardLabel = document.querySelector(".away-label");
 let awayScore = document.querySelector(".away-score");
 let homeTeamSelect = document.querySelector(".home-team-select");
 let awayTeamSelect = document.querySelector(".away-team-select");
@@ -194,17 +198,19 @@ teams.sort(function (a, b) {
 
 teams.forEach(function (team, index) {
     let item = document.createElement("img");
-    item.src = team.scoreboardImg;
+    item.src = team.imgSrc;
     item.dataset.ref = index;
-    item.dataset.url = team.scoreboardImg;
+    item.dataset.url = team.imgSrc;
+    item.dataset.name = team.name;
     item.classList.add("home-drop-down-item");
     homeDropdownContent.appendChild(item);
 });
 teams.forEach(function (team, index) {
     let item = document.createElement("img");
-    item.src = team.scoreboardImg;
+    item.src = team.imgSrc;
     item.dataset.ref = index;
-    item.dataset.url = team.scoreboardImg;
+    item.dataset.url = team.imgSrc;
+    item.dataset.name = team.name;
     item.classList.add("away-drop-down-item");
     awayDropdownContent.appendChild(item);
 });
@@ -212,32 +218,6 @@ teams.forEach(function (team, index) {
 
 let homeDropDownItems = document.querySelectorAll(".home-drop-down-item");
 let awayDropDownItems = document.querySelectorAll(".away-drop-down-item");
-// teams.forEach(function (team) {
-//     option = document.createElement("option");
-//     option.value = team.scoreboardImg;
-//     option.text = team.name;
-//     //  option.style.backgroundImage = team.imgSrc;
-//     option.classList = ["option-styling"];
-//     homeTeamSelect.appendChild(option);
-//     homeTeamSelect.classList = ["home-team-select"];
-//     // homeTeamSelect.size = 2;
-// });
-
-/*
-    Create the away team selections List
-    and add to away team select object
-*/
-
-
-// teams.forEach(function (team) {
-//     var option = document.createElement("option");
-//     option.value = team.scoreboardImg;
-//     option.text = team.name;
-//     option.classList = ["option-styling"];
-//     awayTeamSelect.appendChild(option);
-//     awayTeamSelect.classList = ["away-team-select"];
-
-// });
 
 /*
     Removes the click event listernery from the selection areas
@@ -379,8 +359,8 @@ let handleHomeTeamChange = function (e) {
     }
 
     teams.forEach(function (team) {
-        if (team.scoreboardImg === homeTeamInput) {
-            homeTeamLogo.src = team.scoreboardImg;
+        if (team.imgSrc === homeTeamInput) {
+            homeTeamLogo.src = team.imgSrc;
         }
     });
 
@@ -420,8 +400,8 @@ let handleAwayTeamChange = function (e) {
     // debugger
 
     teams.forEach(function (team) {
-        if (team.scoreboardImg === awayTeamInput) {
-            awayTeamLogo.src = team.scoreboardImg;
+        if (team.imgSrc === awayTeamInput) {
+            awayTeamLogo.src = team.imgSrc;
         }
     });
 
@@ -451,11 +431,13 @@ let handleHomeSelectItem = function (e) {
     homeTeamInput = e.target.dataset.url;
     homeTeam.imgSrc = homeTeamInput;
     // homeTeam.name = e.target.selectedOptions[0].text;
-    homeTeam.name = teams[itemIndex].name;
+    homeTeam.name = e.target.dataset.name;
 
     teams.forEach(function (team) {
-        if (team.scoreboardImg === homeTeamInput) {
-            homeTeamLogo.src = team.scoreboardImg;
+        if (team.imgSrc === homeTeamInput) {
+            homeTeamLogo.src = team.imgSrc;
+            homeTeamScoreboardLabel.textContent = team.nickName;
+            homeTeam.nickName = team.nickName;
         }
     });
 
@@ -497,11 +479,13 @@ let handleAwaySelectItem = function (e) {
     awayTeamInput = e.target.dataset.url;
     awayTeam.imgSrc = awayTeamInput;
     // awayTeam.name = e.target.selectedOptions[0].text;
-    awayTeam.name = teams[itemIndex].name;
+    awayTeam.name = e.target.dataset.name;
 
     teams.forEach(function (team) {
-        if (team.scoreboardImg === awayTeamInput) {
-            awayTeamLogo.src = team.scoreboardImg;
+        if (team.imgSrc === awayTeamInput) {
+            awayTeamLogo.src = team.imgSrc;
+            awayTeamScoreboardLabel.textContent = team.nickName;
+            awayTeam.nickName = team.nickName;
         }
     });
 
@@ -622,11 +606,11 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
             if (isHomeTeamTurn) {
                 homeTeam.score += 1;
                 homeScore.textContent = homeTeam.score;
-                resultText = `CONGRATULATIONS TO THE ${homeTeam.name}`;
+                resultText = `CONGRATULATIONS TO THE ${homeTeam.name} ${homeTeam.nickName}`;
             } else {
                 awayTeam.score += 1;
                 awayScore.textContent = awayTeam.score;
-                resultText = `CONGRATULATIONS TO THE ${awayTeam.name}`;
+                resultText = `CONGRATULATIONS TO THE ${awayTeam.name} ${awayTeam.nickName}`;
             }
             displayGameResult.style.opacity = 1;
             displayGameResult.textContent = resultText.toUpperCase();
