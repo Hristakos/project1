@@ -135,7 +135,8 @@ let awayTeam = {
     team selection changes will start a new sequence of matches 
     and home team will go first.
 */
-isHomeTeam = true;
+isHomeTeamTurn = true;
+isHomeTeamSelection = false;
 
 /*
     Thes variables are used to determine what the game status is
@@ -157,10 +158,16 @@ let homeTeamLogo = document.querySelector(".home-team-logo");
 let homeScore = document.querySelector(".home-score");
 let awayTeamLogo = document.querySelector(".away-team-logo");
 let awayScore = document.querySelector(".away-score");
-let homeTeamSelect = document.querySelector(".home-team");
-let awayTeamSelect = document.querySelector(".away-team");
+let homeTeamSelect = document.querySelector(".home-team-select");
+let awayTeamSelect = document.querySelector(".away-team-select");
 let displayGameResult = document.querySelector(".display-game-result");
 let slideText = document.querySelector(".slide-Text");
+let homeDropdownContent = document.querySelector(".home-dropdown-content");
+let awayDropdownContent = document.querySelector(".away-dropdown-content");
+let homeDropDownSelect = document.querySelector(".home-drop-down-select");
+let awayDropDownSelect = document.querySelector(".away-drop-down-select");
+//let awayDropbtn = document.querySelector(".away-dropbtn");
+
 
 /*
     Sound to play when a result has occured
@@ -175,24 +182,62 @@ let playSiren = function () {
     and add to home team select object
 */
 
-
-teams.forEach(function (team) {
-    option = document.createElement("option");
-    option.value = team.scoreboardImg;
-    option.text = team.name;
-    homeTeamSelect.appendChild(option);
+teams.sort(function (a, b) {
+    if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+    }
+    if (a.name.toUpperCase() > b.name.toUpperCase()) {
+        return 1;
+    }
+    return 0;
 });
+
+teams.forEach(function (team, index) {
+    let item = document.createElement("img");
+    item.src = team.scoreboardImg;
+    item.dataset.ref = index;
+    item.dataset.url = team.scoreboardImg;
+    item.classList.add("home-drop-down-item");
+    homeDropdownContent.appendChild(item);
+});
+teams.forEach(function (team, index) {
+    let item = document.createElement("img");
+    item.src = team.scoreboardImg;
+    item.dataset.ref = index;
+    item.dataset.url = team.scoreboardImg;
+    item.classList.add("away-drop-down-item");
+    awayDropdownContent.appendChild(item);
+});
+
+
+let homeDropDownItems = document.querySelectorAll(".home-drop-down-item");
+let awayDropDownItems = document.querySelectorAll(".away-drop-down-item");
+// teams.forEach(function (team) {
+//     option = document.createElement("option");
+//     option.value = team.scoreboardImg;
+//     option.text = team.name;
+//     //  option.style.backgroundImage = team.imgSrc;
+//     option.classList = ["option-styling"];
+//     homeTeamSelect.appendChild(option);
+//     homeTeamSelect.classList = ["home-team-select"];
+//     // homeTeamSelect.size = 2;
+// });
 
 /*
     Create the away team selections List
     and add to away team select object
 */
-teams.forEach(function (team) {
-    var option = document.createElement("option");
-    option.value = team.scoreboardImg;
-    option.text = team.name;
-    awayTeamSelect.appendChild(option);
-});
+
+
+// teams.forEach(function (team) {
+//     var option = document.createElement("option");
+//     option.value = team.scoreboardImg;
+//     option.text = team.name;
+//     option.classList = ["option-styling"];
+//     awayTeamSelect.appendChild(option);
+//     awayTeamSelect.classList = ["away-team-select"];
+
+// });
 
 /*
     Removes the click event listernery from the selection areas
@@ -208,6 +253,12 @@ let removeSelectionAreaActiveListeners = function () {
     to handle click event on selection area
 
 */
+let setSelectionAreas = function (selectionArea) {
+    selectionArea.classList = ["selection-area"];
+    selectionArea.src = "images/afl.png";
+    selectionArea.addEventListener('click', handleSelectionAreaClick);
+}
+
 let handleSelectionAreaClick = function (e) {
     // if we don't have 2 selections
     if (homeTeamInput === "" || awayTeamInput === "") {
@@ -226,18 +277,18 @@ let handleSelectionAreaClick = function (e) {
     const boardPosition = Number(e.target.dataset.ref)
     e.target.classList.replace("selection-area", "selection-area-clicked");
     // Check which team has been selected and update the selected area with the team img for that team
-    if (isHomeTeam) {
+    if (isHomeTeamTurn) {
         e.target.src = homeTeam.imgSrc;
         // e.target.style.backgroundImage = homeTeam.imgSrc;
         homeTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(homeTeam.selections);
-        isHomeTeam = false;
+        isHomeTeamTurn = false;
     } else {
         // e.target.style.backgroundImage = awayTeam.imgSrc;
         e.target.src = awayTeam.imgSrc;
         awayTeam.selections.push(boardPosition);
         winningCombination = checkSelectionsForWinningCombination(awayTeam.selections);
-        isHomeTeam = true;
+        isHomeTeamTurn = true;
     }
     // If we have a winning combination display the 3 selected areas that make the win
     // and change the back ground image to winner
@@ -250,39 +301,32 @@ let handleSelectionAreaClick = function (e) {
 
     }
 }
-
-/*
-    Resets all the data back to initial state it invoked when a selected team has changed.
-*/
-let resetGame = function () {
-    homeTeam.score = 0;
-    awayTeam.score = 0;
-    attempts = 0;
-    homeScore.textContent = 0;
-    awayScore.textContent = 0;
-
-    removeSelectionAreaActiveListeners();
-
-    selectionAreas.forEach(function (selectionArea) {
-        // if (selectionArea.classList.contains("winner")) {
-        //     selectionArea.classList.replace("winner", "selection-area");
-        // }
-        // if (selectionArea.classList.contains("selection-area-clicked")) {
-        //     selectionArea.classList.replace("selection-area-clicked", "selection-area");
-        // }
-        selectionArea.classList = ["selection-area"];
-        selectionArea.src = "images/afl.png";
-        // selectionArea.style.backgroundImage = "url(images/afl.png)";
-        selectionArea.addEventListener('click', handleSelectionAreaClick);
-
-    });
-
+let resetGameValues = function () {
     homeTeam.selections = [];
     awayTeam.selections = [];
     rematchBtn.disabled = true;
     rematchBtn.style.opacity = 0;
     displayGameResult.textContent = "";
     displayGameResult.style.opacity = 0;
+    attempts = 0;
+}
+
+let resetScore = function () {
+    homeTeam.score = 0;
+    awayTeam.score = 0;
+    homeScore.textContent = 0;
+    awayScore.textContent = 0;
+}
+/*
+    Resets all the data back to initial state it invoked when a selected team has changed.
+*/
+let resetGame = function () {
+    resetScore();
+    removeSelectionAreaActiveListeners();
+    selectionAreas.forEach(setSelectionAreas);
+    resetGameValues();
+
+
 };
 
 /*
@@ -290,41 +334,35 @@ let resetGame = function () {
     a new game.
 */
 let handleRematchBtnClick = function () {
-    selectionAreas.forEach(function (selectionArea) {
-        selectionArea.classList = ["selection-area"];
-        // selectionArea.style.backgroundImage = "url(images/afl.png)";
-        selectionArea.src = "images/afl.png";
-        selectionArea.addEventListener('click', handleSelectionAreaClick);
-    });
-
-    homeTeam.selections = [];
-    awayTeam.selections = [];
-    rematchBtn.disabled = true;
-    rematchBtn.style.opacity = 0;
-    displayGameResult.textContent = "";
-    displayGameResult.style.opacity = 0;
-    attempts = 0;
+    selectionAreas.forEach(setSelectionAreas);
+    resetGameValues();
 
 };
 
+let disableSelection = function (team) {
+
+    let value = isHomeTeamSelection ? homeTeamInput : awayTeamInput;
+    if (team.value === value) {
+        team.disabled = true;
+        team.hidden = true;
+    } else {
+        team.disabled = false;
+        team.hidden = false;
+    }
+}
 /*
     First we set the home team to be first play
     If the remove home team from opposing teams list
     add event listerners to selection areas
 */
 let handleHomeTeamChange = function (e) {
-    isHomeTeam = true;
+    isHomeTeamTurn = true;
+    isHomeTeamSelection = true;
+
     if (homeTeamInput !== "") {
         resetGame();
-        document.querySelectorAll(".away-team  option").forEach(function (team) {
-            if (team.value === e.target.value) {
-                team.disabled = true;
-            } else {
-                team.disabled = false;
-            }
-        })
-
     }
+
     // debugger
     homeTeamInput = e.target.value;
     homeTeam.imgSrc = homeTeamInput;
@@ -339,43 +377,33 @@ let handleHomeTeamChange = function (e) {
     } else {
         homeTeam.name = teams[e.target.options.selectedIndex - 1].name;
     }
-    //homeTeamLogo.style.backgroundImage = homeTeamInput;
+
     teams.forEach(function (team) {
         if (team.scoreboardImg === homeTeamInput) {
             homeTeamLogo.src = team.scoreboardImg;
-            // homeTeamLogo
         }
     });
 
-    document.querySelectorAll(".away-team  option").forEach(function (team) {
-        if (team.value === homeTeamInput) {
-            team.disabled = true;
-        } else {
-            team.disabled = false;
-        }
-    })
+    document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
 
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
 
     })
+
 }
 
 let handleAwayTeamChange = function (e) {
 
 
-    isHomeTeam = true;
+    isHomeTeamTurn = true;
+    isHomeTeamSelection = false;
+
     // if we already have a value want to reset the game totals as we are starting a new match
     if (awayTeamInput !== "") {
         resetGame();
-        document.querySelectorAll(".home-team  option").forEach(function (team) {
-            if (team.value === e.target.value) {
-                team.disabled = true;
-            } else {
-                team.disabled = false;
-            }
-        })
     }
+
     awayTeamInput = e.target.value;
     awayTeam.imgSrc = awayTeamInput;
     if (e.target.options.selectedIndex === 0) {
@@ -397,25 +425,156 @@ let handleAwayTeamChange = function (e) {
         }
     });
 
-    document.querySelectorAll(".home-team  option").forEach(function (team) {
-        if (team.value === awayTeamInput) {
-            team.disabled = true;
-        } else {
-            team.disabled = false;
-        }
-    })
+    document.querySelectorAll(".home-team-select  option").forEach(disableSelection);
 
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
     })
+
+
+
 }
 
+let handleHomeSelectItem = function (e) {
+    console.log(e.target.dataset.ref);
+    let itemIndex = Number(e.target.dataset.ref);
+    //homeDropbtn.textContent = teams[itemIndex].name;
+    // homeDropDownSelect.textContent = "";
+    isHomeTeamTurn = true;
+    isHomeTeamSelection = true;
+
+    if (homeTeamInput !== "") {
+        resetGame();
+    }
+
+    // debugger
+    homeTeamInput = e.target.dataset.url;
+    homeTeam.imgSrc = homeTeamInput;
+    // homeTeam.name = e.target.selectedOptions[0].text;
+    homeTeam.name = teams[itemIndex].name;
+
+    teams.forEach(function (team) {
+        if (team.scoreboardImg === homeTeamInput) {
+            homeTeamLogo.src = team.scoreboardImg;
+        }
+    });
+
+    // document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
+
+    selectionAreas.forEach(function (selectionArea) {
+        selectionArea.addEventListener('click', handleSelectionAreaClick);
+
+    })
+
+    awayDropDownItems.forEach(function (item) {
+        if (Number(item.dataset.ref) === itemIndex) {
+            item.hidden = true;
+        } else {
+            item.hidden = false;
+        }
+
+    });
+
+    homeDropdownContent.style.display = "none";
+    document.querySelector(".home-drop-down-select-img").src = homeTeam.imgSrc;
+    document.querySelector(".home-drop-down-select-text").textContent = homeTeam.name;
+    document.querySelector(".home-drop-down-arrow").src = "images/select-down-arrow.png"
+
+}
+
+let handleAwaySelectItem = function (e) {
+    console.log(e.target.dataset.ref);
+    let itemIndex = Number(e.target.dataset.ref);
+    //awayDropbtn.textContent = teams[itemIndex].name;
+    isHomeTeamTurn = true;
+    isHomeTeamSelection = false;
+
+    if (homeTeamInput !== "") {
+        resetGame();
+    }
+
+    // debugger
+    awayTeamInput = e.target.dataset.url;
+    awayTeam.imgSrc = awayTeamInput;
+    // awayTeam.name = e.target.selectedOptions[0].text;
+    awayTeam.name = teams[itemIndex].name;
+
+    teams.forEach(function (team) {
+        if (team.scoreboardImg === awayTeamInput) {
+            awayTeamLogo.src = team.scoreboardImg;
+        }
+    });
+
+    // document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
+
+    selectionAreas.forEach(function (selectionArea) {
+        selectionArea.addEventListener('click', handleSelectionAreaClick);
+
+    })
+
+    homeDropDownItems.forEach(function (item) {
+        if (Number(item.dataset.ref) === itemIndex) {
+            item.hidden = true;
+        } else {
+            item.hidden = false;
+        }
+
+    });
+
+    awayDropdownContent.style.display = "none";
+    document.querySelector(".away-drop-down-select-img").src = awayTeam.imgSrc;
+    document.querySelector(".away-drop-down-select-text").textContent = awayTeam.name;
+    document.querySelector(".away-drop-down-arrow").src = "images/select-down-arrow.png"
+
+}
+
+let handleHomeDropDownSelectMouseOver = function () {
+    homeDropdownContent.style.display = "grid";
+    homeDropdownContent.style.gridTemplateColumns = "repeat(6,1fr)";
+    document.querySelector(".home-drop-down-arrow").src = "images/select-up-arrow.png";
+}
+let handleAwayDropDownSelectMouseOver = function () {
+    awayDropdownContent.style.display = "grid";
+    awayDropdownContent.style.gridTemplateColumns = "repeat(6,1fr)";
+    document.querySelector(".away-drop-down-arrow").src = "images/select-up-arrow.png"
+}
+
+let handleAwayDropbtnMouseOver = function (e) {
+    awayDropdownContent.style.display = "block";
+
+
+}
 /* 
     Add event listerners
 */
 rematchBtn.addEventListener('click', handleRematchBtnClick);
-homeTeamSelect.addEventListener("change", handleHomeTeamChange);
-awayTeamSelect.addEventListener("change", handleAwayTeamChange);
+//homeDropbtn.addEventListener('mouseover', handleHomeDropbtnMouseOver);
+homeDropDownSelect.addEventListener('mouseover', handleHomeDropDownSelectMouseOver);
+awayDropDownSelect.addEventListener('mouseover', handleAwayDropDownSelectMouseOver);
+homeDropdownContent.addEventListener('mouseleave', function (e) {
+    homeDropdownContent.style.display = "none";
+    document.querySelector(".home-drop-down-arrow").src = "images/select-down-arrow.png"
+});
+awayDropdownContent.addEventListener('mouseleave', function (e) {
+    awayDropdownContent.style.display = "none";
+    document.querySelector(".away-drop-down-arrow").src = "images/select-down-arrow.png"
+});
+//awayDropbtn.addEventListener('mouseover', handleAwayDropbtnMouseOver);
+//homeTeamSelect.addEventListener("change", handleHomeTeamChange);
+//awayTeamSelect.addEventListener("change", handleAwayTeamChange);
+
+
+homeDropDownItems.forEach(function (item) {
+    console.log("hello");
+    item.addEventListener('click', handleHomeSelectItem);
+
+})
+
+
+awayDropDownItems.forEach(function (item) {
+    item.addEventListener('click', handleAwaySelectItem);
+
+})
 
 /*
     used for game logic
@@ -460,7 +619,7 @@ let checkSelectionsForWinningCombination = function (playerSelections) {
         // If we have a winning combination return combination
         if (matches === winningScore) {
 
-            if (isHomeTeam) {
+            if (isHomeTeamTurn) {
                 homeTeam.score += 1;
                 homeScore.textContent = homeTeam.score;
                 resultText = `CONGRATULATIONS TO THE ${homeTeam.name}`;

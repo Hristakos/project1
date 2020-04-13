@@ -58,8 +58,16 @@ body {
     grid-template-columns: repeat(3,1fr);
     align-items: center;
 }
+.versus {
+    color:black;
+    font-weight: bolder;
+}
 .player-selections {
     text-align: center;
+    display: grid;
+    grid-template-columns: 1fr .5fr 1fr;
+    align-items: center;
+    justify-content: center;
     
 }
 .game-board {
@@ -84,6 +92,7 @@ body {
 img{
     border-radius: 25%;
 }
+
 .selection-area {
     width:100%;
     height: 50%;
@@ -107,6 +116,7 @@ img{
 .behind-post-container {
     display: grid;
     grid-template-rows: 1fr 1fr;
+    width: 100%
 }
 .behind-post {
     grid-row-start: 2;
@@ -234,12 +244,158 @@ img{
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 
-select {
-    height: 50px;
+.away-team-select {
+    display: grid;
     background-color: tan;
     align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    font-weight: bolder;
+    cursor: pointer; 
+        /* reset the appearances*/
+        -moz-appearance: none; 
+        -webkit-appearance: none; 
+        appearance: none;
+        /* and then whatever styles you want*/
+
 }
-option {
-    height: 100px;
-    list-style: unset;
+
+.home-team-select{
+    display: grid;
+    background-color: tan;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    font-weight: bolder; 
+    cursor: pointer;
+    text-align: center;
 }
+
+.option-styling {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size:cover;
+   
+}
+
+.away-dropbtn {
+    width: 200px;
+    background-color: transparent;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.home-dropbtn {
+    width: 200px;
+    background-color: transparent;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.home-dropdown-content {
+    display: none;
+    position: absolute;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.away-dropdown-content {
+    display: none;
+    position: absolute;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.home-dropdown-content img:hover {
+    background-color: #f1f1f1
+}
+
+.away-dropdown-content img:hover {
+    background-color: #f1f1f1
+}
+
+/* .dropdown:hover .home-dropdown-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+} */
+.dropdown-content-show {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+
+.dropdown:hover .away-dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    opacity: .5;
+}
+
+.home-drop-down-item,
+.away-drop-down-item {
+    width: 35px;
+    height: 35px;
+}
+.home-dropdown {
+    width: 200px;
+}
+.home-drop-down-select {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    width: 200px;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 10px;
+    /* border: 1px solid black; */
+    grid-row-start: 1;
+}
+
+.home-drop-down-select-img {
+    width: 100%;
+   
+}
+
+.away-dropdown {
+    width: 200px;
+}
+.away-drop-down-select {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    width: 200px;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 10px;
+    /* border: 1px solid black; */
+}
+
+.away-drop-down-select-img {
+    width: 100%;
+}
+.home-drop-down-arrow {
+    width: 100%;
+    border: solid black;
+}
+
+.away-drop-down-arrow {
+    width: 100%;
+    border: solid black;
+}
+
+

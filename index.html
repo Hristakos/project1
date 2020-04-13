@@ -14,13 +14,41 @@
         <div class="game-container">
             <div class="menu">
                 <div class="player-selections">
-                    <select class="home-team">
-                        <option value="">Home Team</option>
-                    </select>
-                    <select class="away-team">
-                        <option value="">Away Team</option>
-                    </select>
+                    <!-- <select class="home-team-select">
+                        <option class="option-styling" value="" style="background-image:url(images/afl.png)">Home Team
+                        </option>
+
+                    </select> -->
+                    <div class="home-dropdown">
+                        <!-- <button class="home-dropbtn">Select Home Team</button> -->
+                        <div class="home-drop-down-select">
+                            <img class="home-drop-down-arrow" src="images/select-down-arrow.png" alt="">
+
+                            <div class="home-drop-down-select-text">Select Home Team</div>
+                            <img class="home-drop-down-select-img" src="" alt="">
+                        </div>
+                        <div class="home-dropdown-content"></div>
+
+                    </div>
+                    <h1 class="versus">V</h1>
+
+                    <div class="away-dropdown">
+                        <div class="away-drop-down-select">
+
+                            <img class="away-drop-down-select-img" src="" alt="">
+                            <div class="away-drop-down-select-text">Select Away Team</div>
+
+                            <img class="away-drop-down-arrow" src="images/select-down-arrow.png" alt="">
+                        </div>
+                        <div class="away-dropdown-content">
+                        </div>
+                    </div>
+                    <!-- <select class="away-team-select">
+                        <option class="option-styling" value="" style="background-image:url(images/afl.png)">Away Team
+                        </option>
+                    </select> -->
                 </div>
+
                 <div class="reload">
 
                     <button class="rematch-btn" disabled>Rematch</button>
