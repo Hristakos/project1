@@ -129,6 +129,8 @@ let awayTeam = {
     score: 0
 };
 
+let isComputerMode = false;
+let availableSelections = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 /* 
     This is used to alternate between teams
     Home team will always start first in the sequence
@@ -138,7 +140,7 @@ let awayTeam = {
     and home team will go first.
 */
 isHomeTeamTurn = true;
-isHomeTeamSelection = false;
+// isHomeTeamSelection = false;
 
 /*
     Thes variables are used to determine what the game status is
@@ -162,15 +164,16 @@ let homeScore = document.querySelector(".home-score");
 let awayTeamLogo = document.querySelector(".away-team-logo");
 let awayTeamScoreboardLabel = document.querySelector(".away-label");
 let awayScore = document.querySelector(".away-score");
-let homeTeamSelect = document.querySelector(".home-team-select");
-let awayTeamSelect = document.querySelector(".away-team-select");
 let displayGameResult = document.querySelector(".display-game-result");
 let slideText = document.querySelector(".slide-Text");
 let homeDropdownContent = document.querySelector(".home-dropdown-content");
 let awayDropdownContent = document.querySelector(".away-dropdown-content");
 let homeDropDownSelect = document.querySelector(".home-drop-down-select");
 let awayDropDownSelect = document.querySelector(".away-drop-down-select");
-//let awayDropbtn = document.querySelector(".away-dropbtn");
+let toggle = document.querySelector(".toggle-button");
+let playerMode = document.querySelector(".player-mode-on");
+let computerMode = document.querySelector(".computer-mode-off");
+
 
 
 /*
@@ -238,52 +241,60 @@ let setSelectionAreas = function (selectionArea) {
     selectionArea.src = "images/afl.png";
     selectionArea.addEventListener('click', handleSelectionAreaClick);
 }
-
-let handleSelectionAreaClick = function (e) {
-    // if we don't have 2 selections
-    if (homeTeamInput === "" || awayTeamInput === "") {
-
-        return;
-    }
-    // remove click event listerner for selected are so can't click again
-    e.target.removeEventListener("click", handleSelectionAreaClick);
-    // to keep track of how many goes are left
+let updateSelectedArea = function (selection) {
     attempts += 1;
 
-    // To store the winning combination to display the winning selections
-    let winningCombination = [];
+    selectionAreas[selection].removeEventListener("click", handleSelectionAreaClick);
+    selectionAreas[selection].classList.replace("selection-area", "selection-area-clicked");
+    let teamSelections = [];
 
-    // The board position that has been selected
-    const boardPosition = Number(e.target.dataset.ref)
-    e.target.classList.replace("selection-area", "selection-area-clicked");
-    // Check which team has been selected and update the selected area with the team img for that team
     if (isHomeTeamTurn) {
-        e.target.src = homeTeam.imgSrc;
-        // e.target.style.backgroundImage = homeTeam.imgSrc;
-        homeTeam.selections.push(boardPosition);
-        winningCombination = checkSelectionsForWinningCombination(homeTeam.selections);
-        isHomeTeamTurn = false;
+        selectionAreas[selection].src = homeTeam.imgSrc;
+        homeTeam.selections.push(selection);
+        teamSelections = homeTeam.selections;
     } else {
-        // e.target.style.backgroundImage = awayTeam.imgSrc;
-        e.target.src = awayTeam.imgSrc;
-        awayTeam.selections.push(boardPosition);
-        winningCombination = checkSelectionsForWinningCombination(awayTeam.selections);
-        isHomeTeamTurn = true;
+        selectionAreas[selection].src = awayTeam.imgSrc;
+        awayTeam.selections.push(selection);
+        teamSelections = awayTeam.selections;
     }
-    // If we have a winning combination display the 3 selected areas that make the win
-    // and change the back ground image to winner
-    // clear all remaining click event listerners for unselected areas to stop the game 
+    let winningCombination = [];
+    winningCombination = checkSelectionsForWinningCombination(teamSelections);
+    isHomeTeamTurn = isHomeTeamTurn ? false : true;
+
     if (winningCombination) {
         winningCombination.forEach(function (selection) {
             selectionAreas[selection].classList = ["winner"];
 
         })
 
+    } else if (attempts < maxAttempts && isComputerMode && !isHomeTeamTurn) {
+        computerSelection();
     }
+
 }
+let computerSelection = function () {
+    let randomIndex = Math.floor(Math.random() * availableSelections.length);
+    let selection = availableSelections.splice(randomIndex, 1).pop();
+    updateSelectedArea(selection);
+}
+let handleSelectionAreaClick = function (e) {
+
+    availableSelectionsRemoveIndex = availableSelections.indexOf(Number(e.target.dataset.ref));
+    availableSelections.splice(availableSelectionsRemoveIndex, 1);
+
+    // if we don't have 2 selections
+    if (homeTeamInput === "" || awayTeamInput === "") {
+
+        return;
+    }
+
+    updateSelectedArea(Number(e.target.dataset.ref))
+}
+
 let resetGameValues = function () {
     homeTeam.selections = [];
     awayTeam.selections = [];
+    availableSelections = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     rematchBtn.disabled = true;
     rematchBtn.style.opacity = 0;
     displayGameResult.textContent = "";
@@ -305,8 +316,6 @@ let resetGame = function () {
     removeSelectionAreaActiveListeners();
     selectionAreas.forEach(setSelectionAreas);
     resetGameValues();
-
-
 };
 
 /*
@@ -316,121 +325,23 @@ let resetGame = function () {
 let handleRematchBtnClick = function () {
     selectionAreas.forEach(setSelectionAreas);
     resetGameValues();
+    if (isComputerMode && !isHomeTeamTurn) {
+        computerSelection();
+    }
 
 };
 
-let disableSelection = function (team) {
-
-    let value = isHomeTeamSelection ? homeTeamInput : awayTeamInput;
-    if (team.value === value) {
-        team.disabled = true;
-        team.hidden = true;
-    } else {
-        team.disabled = false;
-        team.hidden = false;
-    }
-}
-/*
-    First we set the home team to be first play
-    If the remove home team from opposing teams list
-    add event listerners to selection areas
-*/
-let handleHomeTeamChange = function (e) {
-    isHomeTeamTurn = true;
-    isHomeTeamSelection = true;
-
-    if (homeTeamInput !== "") {
-        resetGame();
-    }
-
-    // debugger
-    homeTeamInput = e.target.value;
-    homeTeam.imgSrc = homeTeamInput;
-    // homeTeam.name = e.target.selectedOptions[0].text;
-
-    if (e.target.options.selectedIndex === 0) {
-        homeTeamLogo.src = "";
-        homeTeam.name = "";
-        homeTeam.imgSrc = "";
-        homeTeam.score = 0;
-        homeTeam.selections = [];
-    } else {
-        homeTeam.name = teams[e.target.options.selectedIndex - 1].name;
-    }
-
-    teams.forEach(function (team) {
-        if (team.imgSrc === homeTeamInput) {
-            homeTeamLogo.src = team.imgSrc;
-        }
-    });
-
-    document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
-
-    selectionAreas.forEach(function (selectionArea) {
-        selectionArea.addEventListener('click', handleSelectionAreaClick);
-
-    })
-
-}
-
-let handleAwayTeamChange = function (e) {
-
-
-    isHomeTeamTurn = true;
-    isHomeTeamSelection = false;
-
-    // if we already have a value want to reset the game totals as we are starting a new match
-    if (awayTeamInput !== "") {
-        resetGame();
-    }
-
-    awayTeamInput = e.target.value;
-    awayTeam.imgSrc = awayTeamInput;
-    if (e.target.options.selectedIndex === 0) {
-        awayTeamLogo.src = "";
-        awayTeam.name = "";
-        awayTeam.imgSrc = "";
-        awayTeam.score = 0;
-        awayTeam.selections = [];
-    } else {
-        awayTeam.name = teams[e.target.options.selectedIndex - 1].name;
-    }
-
-    // awayTeamLogo.style.backgroundImage = awayTeamInput;
-    // debugger
-
-    teams.forEach(function (team) {
-        if (team.imgSrc === awayTeamInput) {
-            awayTeamLogo.src = team.imgSrc;
-        }
-    });
-
-    document.querySelectorAll(".home-team-select  option").forEach(disableSelection);
-
-    selectionAreas.forEach(function (selectionArea) {
-        selectionArea.addEventListener('click', handleSelectionAreaClick);
-    })
-
-
-
-}
-
 let handleHomeSelectItem = function (e) {
-    console.log(e.target.dataset.ref);
-    let itemIndex = Number(e.target.dataset.ref);
-    //homeDropbtn.textContent = teams[itemIndex].name;
-    // homeDropDownSelect.textContent = "";
-    isHomeTeamTurn = true;
-    isHomeTeamSelection = true;
 
+    let itemIndex = Number(e.target.dataset.ref);
+    isHomeTeamTurn = true;
     if (homeTeamInput !== "") {
         resetGame();
     }
 
-    // debugger
+
     homeTeamInput = e.target.dataset.url;
     homeTeam.imgSrc = homeTeamInput;
-    // homeTeam.name = e.target.selectedOptions[0].text;
     homeTeam.name = e.target.dataset.name;
 
     teams.forEach(function (team) {
@@ -441,7 +352,6 @@ let handleHomeSelectItem = function (e) {
         }
     });
 
-    // document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
 
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
@@ -465,11 +375,9 @@ let handleHomeSelectItem = function (e) {
 }
 
 let handleAwaySelectItem = function (e) {
-    console.log(e.target.dataset.ref);
+
     let itemIndex = Number(e.target.dataset.ref);
-    //awayDropbtn.textContent = teams[itemIndex].name;
     isHomeTeamTurn = true;
-    isHomeTeamSelection = false;
 
     if (homeTeamInput !== "") {
         resetGame();
@@ -478,7 +386,6 @@ let handleAwaySelectItem = function (e) {
     // debugger
     awayTeamInput = e.target.dataset.url;
     awayTeam.imgSrc = awayTeamInput;
-    // awayTeam.name = e.target.selectedOptions[0].text;
     awayTeam.name = e.target.dataset.name;
 
     teams.forEach(function (team) {
@@ -489,7 +396,6 @@ let handleAwaySelectItem = function (e) {
         }
     });
 
-    // document.querySelectorAll(".away-team-select  option").forEach(disableSelection)
 
     selectionAreas.forEach(function (selectionArea) {
         selectionArea.addEventListener('click', handleSelectionAreaClick);
@@ -532,7 +438,6 @@ let handleAwayDropbtnMouseOver = function (e) {
     Add event listerners
 */
 rematchBtn.addEventListener('click', handleRematchBtnClick);
-//homeDropbtn.addEventListener('mouseover', handleHomeDropbtnMouseOver);
 homeDropDownSelect.addEventListener('mouseover', handleHomeDropDownSelectMouseOver);
 awayDropDownSelect.addEventListener('mouseover', handleAwayDropDownSelectMouseOver);
 homeDropdownContent.addEventListener('mouseleave', function (e) {
@@ -543,13 +448,10 @@ awayDropdownContent.addEventListener('mouseleave', function (e) {
     awayDropdownContent.style.display = "none";
     document.querySelector(".away-drop-down-arrow").src = "images/select-down-arrow.png"
 });
-//awayDropbtn.addEventListener('mouseover', handleAwayDropbtnMouseOver);
-//homeTeamSelect.addEventListener("change", handleHomeTeamChange);
-//awayTeamSelect.addEventListener("change", handleAwayTeamChange);
+
 
 
 homeDropDownItems.forEach(function (item) {
-    console.log("hello");
     item.addEventListener('click', handleHomeSelectItem);
 
 })
@@ -559,6 +461,31 @@ awayDropDownItems.forEach(function (item) {
     item.addEventListener('click', handleAwaySelectItem);
 
 })
+
+toggle.addEventListener("click", function () {
+    toggle.classList.toggle("active");
+
+    if (isComputerMode) {
+        isComputerMode = false;
+        //  gameMode.textContent = "MODE : PLAYER 2";
+
+        playerMode.classList.replace("player-mode-off", "player-mode-on");
+
+        computerMode.classList.replace("computer-mode-on", "computer-mode-off");
+
+    } else {
+        isComputerMode = true;
+        // gameMode.textContent = "MODE : COMPUTER";
+        playerMode.classList.replace("player-mode-on", "player-mode-off");
+
+        computerMode.classList.replace("computer-mode-off", "computer-mode-on");
+
+
+    }
+
+
+
+});
 
 /*
     used for game logic

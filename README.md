@@ -3,6 +3,7 @@
 
 ## How to play
 - Select a home and an away team for a match to commence.
+- Select game mode player 2 gainst a friend or computer play against the computer
 - Home team will go first on the first occassion and then turns will alternate.
 - Rematch button will appear after the game has ended to keep sequence of games going.
 - Scoreboard will update the total wins for each team.
