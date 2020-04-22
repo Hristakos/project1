@@ -131,6 +131,8 @@ let awayTeam = {
 
 let isComputerMode = false;
 let availableSelections = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+let currentSelection = null;
+
 /* 
     This is used to alternate between teams
     Home team will always start first in the sequence
@@ -272,11 +274,102 @@ let updateSelectedArea = function (selection) {
     }
 
 }
-let computerSelection = function () {
-    let randomIndex = Math.floor(Math.random() * availableSelections.length);
-    let selection = availableSelections.splice(randomIndex, 1).pop();
-    updateSelectedArea(selection);
+let getSelection = function (selections) {
+
+    let lookingForSelection = true;
+    let compSelection = null;
+    let winningCombinationsIndex = 0;
+    // debugger
+    while (lookingForSelection && winningCombinationsIndex < winningCombinations.length) {
+        let selectoinsIndex = 0;
+        let combination = winningCombinations[winningCombinationsIndex].slice();
+        console.log("combination " + combination);
+
+        while (lookingForSelection && selectoinsIndex < selections.length) {
+
+            let selection = selections[selectoinsIndex];
+            console.log(selection);
+
+            if (combination.includes(selection)) {
+                combination.splice(combination.indexOf(selection), 1);
+            }
+            if (combination.length === 1 && availableSelections.includes(combination[0])) {
+                compSelection = combination.pop()
+                availableSelections.splice(availableSelections.indexOf(compSelection), 1);
+                lookingForSelection = false;
+            }
+            selectoinsIndex += 1;
+        }
+
+        winningCombinationsIndex += 1;
+
+    }
+
+    return compSelection;
+
 }
+let availableWinningCombination = function () {
+
+    let compSelection = null;
+    if (homeTeam.selections.length === 0) {
+        compSelection = 4;
+        availableSelections.splice(availableSelections.indexOf(4), 1);
+    }
+    if (homeTeam.selections.length === 1 && awayTeam.selections.length === 0) {
+        if (homeTeam.selections[0] === 4) {
+            let randomCornerSelection = [0, 2, 6, 8];
+            let randomIndex = Math.floor(Math.random() * randomCornerSelection.length)
+            compSelection = randomCornerSelection[randomIndex];
+            availableSelections.splice(availableSelections.indexOf(compSelection), 1);
+        } else {
+            compSelection = 4;
+            availableSelections.splice(availableSelections.indexOf(4), 1);
+        }
+    }
+    if (compSelection === null) {
+
+        compSelection = getSelection(awayTeam.selections);
+    }
+    if (compSelection === null) {
+        compSelection = getSelection(homeTeam.selections);
+    }
+
+    return compSelection
+}
+let computerSelection = function () {
+    // debugger
+    let randomize = 0
+    if (homeTeam.score < 5) {
+        randomize = Math.floor(Math.random() * 2);
+    } else if (homeTeam.score < 10) {
+        randomize = Math.floor(Math.random() * 3);
+    } else if (homeTeam.score < 15) {
+        randomize = Math.floor(Math.random() * 4);
+    } else if (homeTeam.score < 20) {
+        randomize = Math.floor(Math.random() * 5);
+    } else {
+        randomize = Math.floor(Math.random() * 10);
+    }
+
+    let computerSelection = null;
+    console.log("randomize = " + randomize)
+    if (randomize !== 1) {
+        if (computerSelection === null) {
+            computerSelection = availableWinningCombination();
+
+        }
+        console.log("computerSelection = " + computerSelection);
+    }
+    if (computerSelection === null) {
+        console.log("random")
+        let randomIndex = Math.floor(Math.random() * availableSelections.length);
+        computerSelection = availableSelections.splice(randomIndex, 1).pop();
+    }
+
+    updateSelectedArea(computerSelection);
+}
+
+
 let handleSelectionAreaClick = function (e) {
 
     availableSelectionsRemoveIndex = availableSelections.indexOf(Number(e.target.dataset.ref));
@@ -287,8 +380,8 @@ let handleSelectionAreaClick = function (e) {
 
         return;
     }
-
-    updateSelectedArea(Number(e.target.dataset.ref))
+    currentSelection = Number(e.target.dataset.ref);
+    updateSelectedArea(currentSelection);
 }
 
 let resetGameValues = function () {
@@ -480,11 +573,7 @@ toggle.addEventListener("click", function () {
 
         computerMode.classList.replace("computer-mode-off", "computer-mode-on");
 
-
     }
-
-
-
 });
 
 /*
