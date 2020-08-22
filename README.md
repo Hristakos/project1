@@ -1,6 +1,5 @@
 # Tic Tac Toe / Naughts and crosses with an AFL twist.
-
-
+Play tic tac toe against a friend or computer. Using an AFL theme where you can choose your afl club.
 ## How to play
 - Select a home and an away team for a match to commence.
 - Select game mode player 2 gainst a friend or computer play against the computer
