@@ -1,4 +1,5 @@
 # Tic Tac Toe / Naughts and crosses with an AFL twist.
+Tic Tac Toe game with AFL Twist.
 # Description
 - Play tic tac toe against a friend or computer. Using an AFL theme where you can choose your afl club.
 ## How to play
